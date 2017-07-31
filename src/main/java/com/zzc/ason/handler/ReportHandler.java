@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zzc.ason.bean.DynamicBean;
 import com.zzc.ason.bean.PatternBean;
+import com.zzc.ason.common.Done;
 import com.zzc.ason.net.MapBeanUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -17,7 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -113,10 +113,10 @@ public final class ReportHandler {
         Map<String, Map<String, Object>> reportMap = Maps.newHashMap();      // 过滤器
         for (String line : readLines) {
             // uuid
-            String uuidNew = parseAttr(NEW_UUID_PATTERN, line, 1);
-            String uuid = StringUtils.isBlank(uuidNew) ? parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
+            String uuidNew = Done.parseAttr(NEW_UUID_PATTERN, line, 1);
+            String uuid = StringUtils.isBlank(uuidNew) ? Done.parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
             // time
-            String time = parseAttr(TIME_PATTERN, line, 1);
+            String time = Done.parseAttr(TIME_PATTERN, line, 1);
             // remark：reportBean
             if (StringUtils.isBlank(uuid) || StringUtils.isBlank(time)) continue;   // 过滤掉不存在uuid与time的日志，认为是坏日志
             if (!reportMap.containsKey(uuid)) {
@@ -133,18 +133,10 @@ public final class ReportHandler {
                 if (reportBean.get(key) != null) continue;
 
                 PatternBean patternBean = entryPattern.getValue();
-                String value = parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
+                String value = Done.parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
                 reportBean.put(key, value);
             }
         }
         return reportMap;
-    }
-
-    private static String parseAttr(Pattern PATTERN, String line, int index) {
-        Matcher matcher = PATTERN.matcher(line);
-        if (matcher.find()) {
-            return matcher.group(index);
-        }
-        return null;
     }
 }
