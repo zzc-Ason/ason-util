@@ -2,11 +2,11 @@ package com.zzc.ason.handler;
 
 import com.google.common.collect.Lists;
 import com.zzc.ason.bean.DynamicBean;
-import com.zzc.ason.common.Done;
 import com.zzc.ason.net.MapBeanUtils;
 import com.zzc.ason.util.DatabaseUtil;
 import org.apache.log4j.Logger;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public final class SchemaHandler {
         } finally {
             DatabaseUtil.closeDataSource();
         }
-        LOGGER.info("acquire data from database over. size: " + schemaBeanList.size());
+//        LOGGER.info("acquire data from database over. size: " + schemaBeanList.size());
         return schemaBeanList;
     }
 
@@ -53,22 +53,23 @@ public final class SchemaHandler {
         } finally {
             DatabaseUtil.closeDataSource();
         }
-        LOGGER.info("acquire data from database over. size: " + schemaBeanList.size());
+//        LOGGER.info("acquire data from database over. size: " + schemaBeanList.size());
         return schemaBeanList;
     }
 
-    public static String acquireDataFromDB(String sql, Object... params) {
+    public static Map<String, Object> acquireDataFromDB(String sql, Object... params) {
         try {
             List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
-            for (Map<String, Object> returnMap : mysqlReturnMap) {
-                Object result = returnMap.get("plaintext");
-                return Done.parseStr(result);
+            Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
+            if (iterator.hasNext()) {
+                Map<String, Object> returnMap = iterator.next();
+                return returnMap;
             }
         } catch (Exception e) {
             LOGGER.error("search database failure", e);
             throw new RuntimeException(e);
         }
-        LOGGER.info("acquire data from database over.");
+//        LOGGER.info("acquire data from database over.");
         return null;
     }
 }

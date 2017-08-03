@@ -64,7 +64,7 @@ public final class DatabaseUtil {
             // SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录
             dataSource.setValidationQuery("select 1");
             //  向调用者输出“链接”资源时，是否检测有效性，如果无效则从连接池中移除，并尝试获取继续获取。默认为false。注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
-            dataSource.setTestOnBorrow(true);
+            dataSource.setTestOnBorrow(false);
             // 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除。默认为false。注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
             dataSource.setTestOnReturn(true);
             //  “空闲链接”检测线程，检测的周期，毫秒数。如果为负值，表示不运行“检测线程”。单位毫秒，默认为-1.
@@ -73,6 +73,9 @@ public final class DatabaseUtil {
             dataSource.setMinEvictableIdleTimeMillis(1800000);
             // 对于“空闲链接”检测线程而言，每次检测的链接资源的个数。默认为3.
             dataSource.setNumTestsPerEvictionRun(3);
+            // 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
+            dataSource.setTestWhileIdle(true);
+            LOGGER.info("initial data source over. connection url: " + dataSource.getUrl());
         } catch (Exception e) {
             LOGGER.error("initial database connection failure", e);
             throw new RuntimeException(e);
@@ -176,6 +179,26 @@ public final class DatabaseUtil {
         return rows;
     }
 
+    public static void beginTransaction() {
+        try {
+            Boolean isTransaction = acquireTransaction();
+            Connection conn = acquireConnection();
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(false);
+                } catch (SQLException e) {
+                    LOGGER.error("begin transaction failure", e);
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (RuntimeException e) {
+            LOGGER.error("begin transaction failure", e);
+            throw new RuntimeException(e);
+        } finally {
+            isTransactionThreadLocal.set(true);
+        }
+    }
+
     private static Boolean acquireTransaction() {
         Boolean isTransaction = isTransactionThreadLocal.get();
         try {
@@ -191,20 +214,6 @@ public final class DatabaseUtil {
         return isTransaction;
     }
 
-    public static void beginTransaction() {
-        Boolean isTransaction = acquireTransaction();
-        isTransaction = true;
-        Connection conn = acquireConnection();
-        if (conn != null) {
-            try {
-                conn.setAutoCommit(false);
-            } catch (SQLException e) {
-                LOGGER.error("begin transaction failure", e);
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
     public static void commitTransaction() {
         Connection conn = connectionThreadLocal.get();
         if (conn != null) {
@@ -214,6 +223,7 @@ public final class DatabaseUtil {
                 LOGGER.error("commit transaction failure", e);
                 throw new RuntimeException(e);
             } finally {
+                removeTransaction();
                 closeConnection();
             }
         }
@@ -228,8 +238,16 @@ public final class DatabaseUtil {
                 LOGGER.error("rollback transaction failure", e);
                 throw new RuntimeException(e);
             } finally {
+                removeTransaction();
                 closeConnection();
             }
+        }
+    }
+
+    private static void removeTransaction() {
+        Boolean isTransaction = isTransactionThreadLocal.get();
+        if (isTransaction != null) {
+            isTransactionThreadLocal.remove();
         }
     }
 

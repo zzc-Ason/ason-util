@@ -55,7 +55,7 @@ public final class ReportHandler {
                     compoundReportBean(reportList, reportMap);
                 }
                 nowTime = DateUtils.addDays(nowTime, 1);
-                LOGGER.info(date + " report list size: " + reportList.size());
+//                LOGGER.info(date + " report list size: " + reportList.size());
             }
         } catch (Exception e) {
             LOGGER.error("acquire report info failure", e);

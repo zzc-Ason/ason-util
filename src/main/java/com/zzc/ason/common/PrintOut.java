@@ -51,21 +51,21 @@ public final class PrintOut {
         for (T t : list) {
             LOGGER.info(t.toString());
         }
-        LOGGER.info("this list size: " + list.size());
+//        LOGGER.info("this list size: " + list.size());
     }
 
     public static void map(Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             LOGGER.info(entry.getKey() + Constant.GROUP_SEPARATOR + entry.getValue());
         }
-        LOGGER.info("this map size: " + map.size());
+//        LOGGER.info("this map size: " + map.size());
     }
 
     public static <T> void set(Set<T> set) {
         for (T t : set) {
             LOGGER.info(t.toString());
         }
-        LOGGER.info("this set size: " + set.size());
+//        LOGGER.info("this set size: " + set.size());
     }
 
     public static void main(String[] args) throws Exception {
