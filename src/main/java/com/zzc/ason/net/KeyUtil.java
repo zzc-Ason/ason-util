@@ -8,7 +8,9 @@ import java.util.UUID;
 
 /**
  * author : Ason
- * createTime : 2017 年 07 月 30 日 上午 9:24
+ * createTime : 2017 年 08 月 08 日
+ * className : KeyUtil
+ * remark: 按序产生UUID工具
  */
 public class KeyUtil {
 

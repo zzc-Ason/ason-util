@@ -12,7 +12,9 @@ import java.io.InputStreamReader;
 
 /**
  * author : Ason
- * createTime : 2017 年 08 月 02 日
+ * createTime : 2017 年 08 月 08 日
+ * className : ChExec
+ * remark: sftp操作助手ChannelExec
  */
 public class ChExec {
     private static final Logger LOGGER = Logger.getLogger(ChExec.class);

@@ -13,7 +13,12 @@ import org.apache.oro.text.regex.MalformedPatternException;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * author : Ason
+ * createTime : 2017 年 08 月 08 日
+ * className : ChShell
+ * remark: sftp操作助手ChannelShell
+ */
 public class ChShell {
     private static final Logger LOGGER = Logger.getLogger(ChShell.class);
 

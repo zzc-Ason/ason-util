@@ -11,7 +11,12 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Vector;
-
+/**
+ * author : Ason
+ * createTime : 2017 年 08 月 08 日
+ * className : ChSftp
+ * remark: sftp操作助手ChannelSftp
+ */
 public class ChSftp {
     private static final Logger LOGGER = Logger.getLogger(ChSftp.class);
 

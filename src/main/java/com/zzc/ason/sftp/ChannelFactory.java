@@ -7,7 +7,10 @@ import org.apache.log4j.Logger;
 import java.util.Properties;
 
 /**
- * Created by Administrator on 2017/6/28 0028.
+ * author : Ason
+ * createTime : 2017 年 08 月 08 日
+ * className : ChannelFactory
+ * remark: sftp操作助手ChannelFactory
  */
 public class ChannelFactory {
     private static final Logger LOGGER = Logger.getLogger(ChannelFactory.class);

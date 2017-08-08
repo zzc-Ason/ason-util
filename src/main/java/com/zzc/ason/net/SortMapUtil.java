@@ -10,7 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Administrator on 2017/6/8 0008.
+ * author : Ason
+ * createTime : 2017 年 08 月 08 日
+ * className : SortMapUtil
+ * remark: map排序工具
  */
 public final class SortMapUtil {
     private static final Logger LOGGER = Logger.getLogger(SortMapUtil.class);

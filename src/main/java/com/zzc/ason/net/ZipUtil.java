@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/3/16 0016.
+ * author : Ason
+ * createTime : 2017 年 08 月 08 日
+ * className : ZipUtil
+ * remark: 文件压缩工具
  */
 public final class ZipUtil {
 

@@ -12,7 +12,9 @@ import java.util.Collection;
 
 /**
  * author : Ason
- * createTime : 2017 年 08 月 03 日
+ * createTime : 2017 年 08 月 08 日
+ * className : ZipHandler
+ * remark: 压缩工具
  */
 public class ZipHandler {
     private static final Logger LOGGER = Logger.getLogger(ZipHandler.class);

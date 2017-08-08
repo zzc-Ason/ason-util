@@ -12,7 +12,9 @@ import java.util.Collection;
 
 /**
  * author : Ason
- * createTime : 2017 年 08 月 03 日
+ * createTime : 2017 年 08 月 08 日
+ * className : FileUtil
+ * remark: 文件操作工具
  */
 public final class FileUtil {
     private static final Logger LOGGER = Logger.getLogger(FileUtil.class);
