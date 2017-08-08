@@ -28,7 +28,7 @@ public final class SchemaHandler {
             if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
 
             Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map<String, Object> returnMap = iterator.next();
                 DynamicBean dynamicBean = new DynamicBean(returnMap);
                 schemaBeanList.add(dynamicBean);
@@ -49,7 +49,7 @@ public final class SchemaHandler {
             if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
 
             Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map<String, Object> returnMap = iterator.next();
                 DynamicBean dynamicBean = new DynamicBean(returnMap);
                 schemaBeanList.add(dynamicBean);
@@ -69,7 +69,7 @@ public final class SchemaHandler {
             if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
 
             Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map<String, Object> returnMap = iterator.next();
                 T t = MapBeanUtils.mapToObject(returnMap, cls);
                 schemaBeanList.add(t);
@@ -90,7 +90,7 @@ public final class SchemaHandler {
             if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
 
             Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 Map<String, Object> returnMap = iterator.next();
                 T t = MapBeanUtils.mapToObject(returnMap, cls);
                 schemaBeanList.add(t);

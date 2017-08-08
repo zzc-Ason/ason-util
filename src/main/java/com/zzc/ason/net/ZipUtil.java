@@ -1,6 +1,6 @@
 package com.zzc.ason.net;
 
-import com.zzc.ason.common.Constant;
+import com.zzc.ason.common.Symbol;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -41,7 +41,7 @@ public final class ZipUtil {
 
     public static void unZip_all(String srcFile) throws ZipException {
         ZipFile zipFile = new ZipFile(srcFile);
-        zipFile.extractAll(srcFile.substring(0, srcFile.lastIndexOf(Constant.LINUX_SEPARATOR)));
+        zipFile.extractAll(srcFile.substring(0, srcFile.lastIndexOf(Symbol.LINUX_SEPARATOR)));
     }
 
     public static void zip_list(ArrayList<File> files, String destFile) throws ZipException {
@@ -75,7 +75,7 @@ public final class ZipUtil {
         List fileHeaderList = zipFile.getFileHeaders();
         for (int i = 0; i < fileHeaderList.size(); i++) {
             FileHeader fileHeader = (FileHeader) fileHeaderList.get(i);
-            zipFile.extractFile(fileHeader, srcFile.substring(0, srcFile.lastIndexOf(Constant.LINUX_SEPARATOR)));
+            zipFile.extractFile(fileHeader, srcFile.substring(0, srcFile.lastIndexOf(Symbol.LINUX_SEPARATOR)));
         }
     }
 

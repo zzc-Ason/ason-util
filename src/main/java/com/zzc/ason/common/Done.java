@@ -36,7 +36,7 @@ public class Done {
     public static String handlerTimeArgs(String arg) {
         if (StringUtils.isNotBlank(arg)) {
             try {
-                DateUtils.parseDate(arg, Constant.DATE_FORMAT_1);
+                DateUtils.parseDate(arg, DateFormat.DATE_FORMAT_1);
                 return arg;
             } catch (ParseException e) {
                 LOGGER.error("startTime or endTime is invalid.");
@@ -60,7 +60,7 @@ public class Done {
         String back_str = "";
         if (obj != null) {
             if (obj instanceof Date) {
-                back_str = DateFormatUtils.format((Date) obj, Constant.DATE_FORMAT_3);
+                back_str = DateFormatUtils.format((Date) obj, DateFormat.DATE_FORMAT_3);
             } else {
                 String[] strs = obj.toString().trim().split("");
                 for (String s : strs) {
