@@ -3,6 +3,7 @@ package com.zzc.ason.handler;
 import com.zzc.ason.net.ZipUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class ZipHandler {
                 files.add(file);
             }
             if (file.isDirectory()) {
-                Collection<File> zipFiles = FileUtils.listFiles(file, null, null);
+                Collection<File> zipFiles = FileUtils.listFiles(file, FileFilterUtils.fileFileFilter(), null);
                 files.addAll(zipFiles);
             }
 

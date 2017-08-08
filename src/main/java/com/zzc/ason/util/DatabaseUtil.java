@@ -1,5 +1,6 @@
 package com.zzc.ason.util;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
@@ -140,7 +141,7 @@ public final class DatabaseUtil {
     }
 
     private static List<Map<String, Object>> executeQueryTransaction(String sql, Object... params) {
-        List<Map<String, Object>> result;
+        List<Map<String, Object>> result = Lists.newArrayList();
         try {
             Connection conn = connectionThreadLocal.get();
             if (conn == null) return null;
@@ -153,7 +154,7 @@ public final class DatabaseUtil {
     }
 
     private static List<Map<String, Object>> executeQueryNoTransaction(String sql, Object... params) {
-        List<Map<String, Object>> result;
+        List<Map<String, Object>> result = Lists.newArrayList();
         try {
             Connection conn = acquireConnection();
             result = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);

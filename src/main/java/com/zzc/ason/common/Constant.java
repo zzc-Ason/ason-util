@@ -18,6 +18,7 @@ public final class Constant {
     public static final String LINUX_SEPARATOR = "/";      // linux分隔符
     public static final String WINDOWS_SEPARATOR = "\\";   // windows分隔符
     public static final String MASK = "****************";  // 掩码
+    public static final String SINGLE_MASK = "*";           // 单掩码
 
     public static final String DATE_FORMAT_1 = "yyyyMMdd";                 // 时间格式1
     public static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";     // 时间格式2
