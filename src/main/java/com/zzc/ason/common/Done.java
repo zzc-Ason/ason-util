@@ -1,6 +1,7 @@
 package com.zzc.ason.common;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -21,6 +22,34 @@ import java.util.regex.Pattern;
  */
 public class Done {
     private static final Logger LOGGER = Logger.getLogger(Done.class);
+
+    public static void jointStr(StringBuilder sb, String s) {
+        if (StringUtils.isBlank(sb.toString())) sb.append(s);
+        else sb.append(Symbol.COMMA + s);
+    }
+
+    public static boolean compareEquals(Object... params) {
+        if (ArrayUtils.isEmpty(params)) return true;
+        if (params[0] == null) {
+            for (Object o : params) {
+                if (o != null) return false;
+            }
+        } else {
+            String init = params[0].toString();
+            for (Object o : params) {
+                if (o == null) return false;
+                if (!StringUtils.equals(init, o.toString())) return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean containsNull(Object... params) {
+        for (Object o : params) {
+            if (o == null) return true;
+        }
+        return false;
+    }
 
     public static String acquireValueByFieldName(Object obj, String fieldName) throws Exception {
         if (obj == null) return null;
@@ -57,16 +86,16 @@ public class Done {
     }
 
     public static String trim(Object obj) {
-        String back_str = "";
+        String back_str = StringUtils.EMPTY;
         if (obj != null) {
             if (obj instanceof Date) {
                 back_str = DateFormatUtils.format((Date) obj, DateFormat.DATE_FORMAT_3);
             } else {
-                String[] strs = obj.toString().trim().split("");
-                for (String s : strs) {
-                    if (!" ".equals(s) && !"\t".equals(s)) {
-                        back_str += s;
-                    }
+                String[] ss = obj.toString().trim().split("");
+                Pattern p = Pattern.compile("\t|\r|\n|\\s");
+                for (String s : ss) {
+                    Matcher m = p.matcher(s);
+                    if (!m.find()) back_str += s;
                 }
             }
         }

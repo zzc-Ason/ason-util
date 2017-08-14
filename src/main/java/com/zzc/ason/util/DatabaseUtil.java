@@ -271,6 +271,7 @@ public final class DatabaseUtil {
         if (dataSource != null) {
             try {
                 dataSource.close();
+                LOGGER.info("close data source.");
             } catch (SQLException e) {
                 LOGGER.error("close data source failure", e);
                 throw new RuntimeException(e);

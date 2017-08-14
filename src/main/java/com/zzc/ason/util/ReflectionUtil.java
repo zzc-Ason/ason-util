@@ -13,8 +13,8 @@ public final class ReflectionUtil {
 
     private static final Logger LOGGER = Logger.getLogger(ReflectionUtil.class);
 
-    public static Object newInstance(Class<?> cls) {
-        Object instance;
+    public static <T> T newInstance(Class<T> cls) {
+        T instance;
         try {
             instance = cls.newInstance();
         } catch (Exception e) {
