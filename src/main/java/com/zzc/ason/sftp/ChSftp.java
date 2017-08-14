@@ -2,8 +2,8 @@ package com.zzc.ason.sftp;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
-import com.zzc.ason.common.Done;
 import com.zzc.ason.common.Symbol;
+import com.zzc.ason.util.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Vector;
+
 /**
  * author : Ason
  * createTime : 2017 年 08 月 08 日
@@ -51,7 +52,7 @@ public class ChSftp {
         }
         LOGGER.info("start to upload file \"" + srcFullPath + "\" to \"" + dstFullPath + "\"");
         if (file.isDirectory()) {
-            LinkedList<File> srcFiles = Done.traverseFolder(srcFullPath);
+            LinkedList<File> srcFiles = FileUtil.traverseFolder(srcFullPath);
             for (File srcFile : srcFiles) {
                 LOGGER.info("upload file: " + srcFile.getAbsolutePath());
                 chSftp.put(srcFile.getAbsolutePath(), dstFullPath, ChannelSftp.OVERWRITE);
