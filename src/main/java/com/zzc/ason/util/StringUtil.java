@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * author : Ason
  * createTime : 2017 年 08 月 14 日
  */
-public class StringUtil {
+public final class StringUtil {
     private static final Logger LOGGER = Logger.getLogger(StringUtil.class);
 
     public static void jointStr(StringBuilder sb, String s) {
