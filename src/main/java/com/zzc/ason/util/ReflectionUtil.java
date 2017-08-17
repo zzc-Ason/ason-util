@@ -1,8 +1,12 @@
 package com.zzc.ason.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -54,5 +58,37 @@ public final class ReflectionUtil {
             LOGGER.error("set field failure", e);
             throw new RuntimeException(e);
         }
+    }
+
+    public static void setValueByFieldName(Object obj, String fieldName, Object value) {
+        try {
+            PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
+            Method writeMethod = pd.getWriteMethod();
+            if (writeMethod == null) return;
+
+            writeMethod.invoke(obj, value);
+        } catch (Exception e) {
+            LOGGER.error("set value of field \"" + fieldName + "\" failure", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object acquireValueByFieldName(Object obj, String fieldName) {
+        try {
+            if (obj == null) return null;
+            if (StringUtils.isBlank(fieldName)) return null;
+
+            PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
+            Method getMethod = pd.getReadMethod();
+
+            return getMethod == null ? null : getMethod.invoke(obj);
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

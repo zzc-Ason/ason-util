@@ -101,4 +101,12 @@ public final class SchemaHandler {
         }
         return schemaBeanList;
     }
+
+    public static <T> T acquireEntity(String sql, Class<T> cls, String... params) {
+        return DatabaseUtil.queryEntity(cls, sql, params);
+    }
+
+    public static <T> List<T> acquireEntityList(String sql, Class<T> cls, String... params) {
+        return DatabaseUtil.queryEntityList(cls, sql, params);
+    }
 }

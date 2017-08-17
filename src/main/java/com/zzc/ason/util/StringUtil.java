@@ -66,4 +66,10 @@ public class StringUtil {
     public static String parseStr(Object source) {
         return source == null ? null : source.toString();
     }
+
+    public static String parseFieldToStr(Object obj, String fieldName) {
+        if (obj == null) return null;
+        Object value = ReflectionUtil.acquireValueByFieldName(obj, fieldName);
+        return trim(parseStr(value));
+    }
 }

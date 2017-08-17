@@ -3,6 +3,8 @@ package com.zzc.ason.util;
 import com.google.common.collect.Lists;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.log4j.Logger;
 
@@ -41,23 +43,35 @@ public final class DatabaseUtil {
     }
 
     public static void initialDataSource(String host, String user, String password) {
+        initialDataSource(host, user, password, _driverClassName, _initialSize, _maxActive, _maxIdle, _minIdle, _maxWaitMillis);
+    }
+
+    public static void initialDataSource(String host, String user, String password, String driverClassName) {
+        initialDataSource(host, user, password, driverClassName, _initialSize, _maxActive, _maxIdle, _minIdle, _maxWaitMillis);
+    }
+
+    public static void initialDataSource(String host, String user, String password, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
+        initialDataSource(host, user, password, _driverClassName, initialSize, maxActive, maxIdle, minIdle, maxWaitMillis);
+    }
+
+    public static void initialDataSource(String host, String user, String password, String driverClassName, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
         try {
             dataSource = acquireDataSource();
             // 为数据源实例指定必须的属性
             dataSource.setUrl(host);
             dataSource.setUsername(user);
             dataSource.setPassword(password);
-            dataSource.setDriverClassName(_driverClassName);
+            dataSource.setDriverClassName(driverClassName);
             // 指定数据库连接池中初始化连接数的个数
-            dataSource.setInitialSize(_initialSize);
+            dataSource.setInitialSize(initialSize);
             // 指定最大连接数：同一时刻可以同时向数据库申请的连接数,默认为8.
-            dataSource.setMaxActive(_maxActive);
+            dataSource.setMaxActive(maxActive);
             // 指定最大连接数:在数据库连接池中保存的最多的空闲连接的数量,默认为8.
-            dataSource.setMaxIdle(_maxIdle);
+            dataSource.setMaxIdle(maxIdle);
             // 指定最小连接数:在数据库连接池中保存的最少的空闲连接的数量,默认为0.
-            dataSource.setMinIdle(_minIdle);
+            dataSource.setMinIdle(minIdle);
             // 等待数据库连接池分配连接的最长时间。单位为毫秒。超出时间将抛出异常.默认为-1.表示永不超时.
-            dataSource.setMaxWait(_maxWaitMillis);
+            dataSource.setMaxWait(maxWaitMillis);
             // 连接被认为是被泄露（超时）时，是否可以被删除
             dataSource.setRemoveAbandoned(true);
             // 泄露的连接可以被删除的超时值，单位秒
@@ -81,30 +95,6 @@ public final class DatabaseUtil {
             LOGGER.error("initial database connection failure", e);
             throw new RuntimeException(e);
         }
-    }
-
-    public static void initialDataSource(String host, String user, String password, String driverClassName) {
-        _driverClassName = driverClassName;
-        initialDataSource(host, user, password);
-    }
-
-    public static void initialDataSource(String host, String user, String password, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
-        _initialSize = initialSize;
-        _maxActive = maxActive;
-        _maxIdle = maxIdle;
-        _minIdle = minIdle;
-        _maxWaitMillis = maxWaitMillis;
-        initialDataSource(host, user, password);
-    }
-
-    public static void initialDataSource(String host, String user, String password, String driverClassName, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
-        _driverClassName = driverClassName;
-        _initialSize = initialSize;
-        _maxActive = maxActive;
-        _maxIdle = maxIdle;
-        _minIdle = minIdle;
-        _maxWaitMillis = maxWaitMillis;
-        initialDataSource(host, user, password);
     }
 
     private static BasicDataSource acquireDataSource() {
@@ -178,6 +168,34 @@ public final class DatabaseUtil {
             throw new RuntimeException(e);
         }
         return rows;
+    }
+
+    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Object... params) {
+        List<T> entityList;
+        try {
+            Connection conn = acquireConnection();
+            entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
+        } catch (SQLException e) {
+            LOGGER.error("query entity list failure", e);
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
+        return entityList;
+    }
+
+    public static <T> T queryEntity(Class<T> entityClass, String sql, Object... params) {
+        T entity;
+        try {
+            Connection conn = acquireConnection();
+            entity = QUERY_RUNNER.query(conn, sql, new BeanHandler<T>(entityClass), params);
+        } catch (SQLException e) {
+            LOGGER.error("query entity failure", e);
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
+        return entity;
     }
 
     public static void beginTransaction() {

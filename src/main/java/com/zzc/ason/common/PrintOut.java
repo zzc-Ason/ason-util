@@ -49,19 +49,28 @@ public final class PrintOut {
 
     public static <T> void list(List<T> list) {
         for (T t : list) {
-            LOGGER.info(t.toString());
+            if (t == null)
+                LOGGER.info(null);
+            else
+                LOGGER.info(t.toString());
         }
     }
 
     public static void map(Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
-            LOGGER.info(entry.getKey() + Symbol.GROUP_SEPARATOR + entry.getValue());
+            if (entry == null)
+                LOGGER.info(null + Symbol.GROUP_SEPARATOR + null);
+            else
+                LOGGER.info(entry.getKey() + Symbol.GROUP_SEPARATOR + entry.getValue());
         }
     }
 
     public static <T> void set(Set<T> set) {
         for (T t : set) {
-            LOGGER.info(t.toString());
+            if (t == null)
+                LOGGER.info(null);
+            else
+                LOGGER.info(t.toString());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.zzc.ason.util;
 
 
+import com.zzc.ason.common.Symbol;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -10,6 +11,11 @@ import org.apache.commons.lang3.StringUtils;
  * remark: 类型转换助手
  */
 public final class CastUtil {
+
+    public static String rate(Integer c, Integer t) {
+        Double h = Double.valueOf(Math.round(c * 10000 / t));
+        return h / 100 + Symbol.PER;
+    }
 
     public static String castString(Object obj) {
         return CastUtil.castString(obj, "");

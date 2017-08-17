@@ -14,6 +14,7 @@ public class Symbol {
     public static final String RN = "\r\n";         // 换行符
     public static final String TAG = "\t";          // 制表符
     public static final String DOT = ".";           // 点
+    public static final String PER = "%";           // 百分号
     public static final String UNDERLINE = "_";    // 下划线
     public static final String GROUP_SEPARATOR = "<->";    // 组分隔符
     public static final String LINUX_SEPARATOR = "/";      // linux分隔符
