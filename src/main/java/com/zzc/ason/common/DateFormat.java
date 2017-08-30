@@ -12,15 +12,20 @@ import java.util.Date;
  */
 public final class DateFormat {
 
-    public static final String DATE_FORMAT_1 = "yyyyMMdd";                 // 时间格式1
-    public static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";     // 时间格式2
-    public static final String DATE_FORMAT_3 = "yyyy-MM-dd/HH:mm:ss";     // 时间格式3
-    public static final String DATE_FORMAT_4 = "yyyy-MM-dd HH:mm:ss.S";   // 时间格式4
-    public static final String DATE_FORMAT_5 = "yyyy/MM/dd HH:mm:ss";     // 时间格式5
-    public static final String DATE_FORMAT_6 = "yyyy-MM-dd";     // 时间格式6
-    public static final String DATE_FORMAT_7 = "yyyy/MM/dd";     // 时间格式7
+    public static final String DATE_FORMAT_1 = "yyyyMMdd";                  // 时间格式1
+    public static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";      // 时间格式2
+    public static final String DATE_FORMAT_3 = "yyyy-MM-dd/HH:mm:ss";      // 时间格式3
+    public static final String DATE_FORMAT_4 = "yyyy-MM-dd HH:mm:ss.S";    // 时间格式4
+    public static final String DATE_FORMAT_5 = "yyyy/MM/dd HH:mm:ss";      // 时间格式5
+    public static final String DATE_FORMAT_6 = "yyyy-MM-dd";                // 时间格式6
+    public static final String DATE_FORMAT_7 = "yyyy/MM/dd";                // 时间格式7
+    public static final String DATE_FORMAT_8 = "yyyMM";                      // 时间格式8
 
-    public static final String[] DATE_FORMAT_PATTERN = new String[]{DATE_FORMAT_1, DATE_FORMAT_2, DATE_FORMAT_3, DATE_FORMAT_4, DATE_FORMAT_5, DATE_FORMAT_6, DATE_FORMAT_7};    // 时间解析格式
+    public static final String YEAR = "yyyy";         // 年份
+    public static final String MONTH = "MM";          // 月份
+    public static final String DATE = "dd";           // 日期
+
+    public static final String[] DATE_FORMAT_PATTERN = new String[]{DATE_FORMAT_1, DATE_FORMAT_2, DATE_FORMAT_3, DATE_FORMAT_4, DATE_FORMAT_5, DATE_FORMAT_6, DATE_FORMAT_7, DATE_FORMAT_8};    // 时间解析格式
 
     public static int differentDays(Calendar startTimeCalendar, Calendar endTimeCalendar) {
         int day1 = startTimeCalendar.get(Calendar.DAY_OF_YEAR);
