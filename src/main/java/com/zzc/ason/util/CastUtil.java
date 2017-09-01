@@ -3,6 +3,7 @@ package com.zzc.ason.util;
 
 import com.zzc.ason.common.Symbol;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * author : Ason
@@ -11,9 +12,11 @@ import org.apache.commons.lang3.StringUtils;
  * remark: 类型转换助手
  */
 public final class CastUtil {
+    private static final Logger LOGGER = Logger.getLogger(CastUtil.class);
 
     public static String rate(Integer c, Integer t) {
-        Double h = Double.valueOf(Math.round(c * 10000 / t));
+        Double h = 0.0;
+        if (t.intValue() != 0) h = Double.valueOf(Math.round(c * 10000 / t.intValue()));
         return h / 100 + Symbol.PER;
     }
 

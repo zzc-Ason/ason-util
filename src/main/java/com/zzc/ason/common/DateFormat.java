@@ -11,6 +11,7 @@ import java.util.Date;
  * className : DateFormat
  */
 public final class DateFormat {
+    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(DateFormat.class);
 
     public static final String DATE_FORMAT_1 = "yyyyMMdd";                  // 时间格式1
     public static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";      // 时间格式2
@@ -51,7 +52,8 @@ public final class DateFormat {
 
     public static int differentYears(Date startTime, Date endTime) {
         if (DateUtils.truncatedCompareTo(startTime, endTime, Calendar.DATE) > 0) {
-            throw new RuntimeException("\"" + startTime + "\" must before \"" + endTime + "\"");
+            LOGGER.error("\"" + startTime + "\" must before \"" + endTime + "\"");
+            return -1;
         }
         for (int i = 1; ; i++) {
             Date nextDate = DateUtils.addYears(startTime, i);
@@ -60,5 +62,4 @@ public final class DateFormat {
             }
         }
     }
-
 }

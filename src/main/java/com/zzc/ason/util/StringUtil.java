@@ -18,6 +18,10 @@ import java.util.regex.Pattern;
 public final class StringUtil {
     private static final Logger LOGGER = Logger.getLogger(StringUtil.class);
 
+    private static final String EMPTY = "";         // empty
+    private static final String NULL = "null";      // null
+    public static final String BLANK = " ";         // 空格
+
     public static void jointStr(StringBuilder sb, String s) {
         if (StringUtils.isBlank(sb.toString())) sb.append(s);
         else sb.append(Symbol.COMMA + s);

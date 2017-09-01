@@ -2,8 +2,8 @@ package com.zzc.ason.sftp;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
-import com.zzc.ason.common.Symbol;
 import com.zzc.ason.util.FileUtil;
+import com.zzc.ason.util.StringUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -77,7 +77,7 @@ public class ChSftp {
             ListIterator listIterator = ls.listIterator();
             while (listIterator.hasNext()) {
                 Object next = listIterator.next();
-                String[] files = next.toString().split(Symbol.BLANK);
+                String[] files = next.toString().split(StringUtil.BLANK);
                 String fileName = files[files.length - 1];
                 if (".".equals(fileName) || "..".equals(fileName)) {
                     continue;
