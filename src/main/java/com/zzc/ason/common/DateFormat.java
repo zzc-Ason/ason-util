@@ -62,4 +62,15 @@ public final class DateFormat {
             }
         }
     }
+
+    public static int beforePresentYears(Date compareTime, Integer days) {
+        Date time = DateUtils.addDays(compareTime, days);
+        int rs = DateUtils.truncatedCompareTo(compareTime, time, Calendar.DATE);
+        return rs >= 0 ? differentYears(time, compareTime) : differentYears(compareTime, time);
+    }
+
+//    public static void main(String[] args) throws ParseException {
+//        Date date = DateUtils.parseDate("2017-05-09 23:04:11", DATE_FORMAT_PATTERN);
+//        System.out.println(beforePresentYears(date, 30));
+//    }
 }
