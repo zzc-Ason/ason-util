@@ -15,5 +15,8 @@ public class DoneTest {
         user = new User("tom", 22);
     }
 
+    public static void main(String[] args) {
+        User user = new User("tom", 22);
+    }
 }
 

@@ -5,8 +5,6 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import java.text.ParseException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * author : Ason
@@ -37,13 +35,4 @@ public class Done {
         }
         return arg;
     }
-
-    public static String parseAttr(Pattern PATTERN, String line, int index) {
-        Matcher matcher = PATTERN.matcher(line);
-        if (matcher.find()) {
-            return matcher.group(index);
-        }
-        return null;
-    }
-
 }

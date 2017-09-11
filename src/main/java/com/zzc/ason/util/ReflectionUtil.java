@@ -1,5 +1,6 @@
 package com.zzc.ason.util;
 
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -8,6 +9,8 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * author : Ason
@@ -90,5 +93,16 @@ public final class ReflectionUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static <T> Map<String, Type> acquireClassType(Class<T> cls) {
+        Map<String, Type> classType = Maps.newHashMap();
+        Field[] fields = cls.getDeclaredFields();
+        for (Field field : fields) {
+            String fieldName = field.getName();
+            Type declaringClass = field.getGenericType();
+            if (!classType.containsKey(fieldName)) classType.put(fieldName, declaringClass);
+        }
+        return classType;
     }
 }

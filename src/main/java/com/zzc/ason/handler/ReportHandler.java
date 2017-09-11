@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zzc.ason.bean.DynamicBean;
 import com.zzc.ason.bean.PatternBean;
-import com.zzc.ason.common.Done;
-import com.zzc.ason.net.MapBeanUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -18,6 +16,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -77,46 +76,46 @@ public final class ReportHandler {
         }
     }
 
-    /**
-     * Describe : 读取日志到指定类集合：List<T>
-     */
-    public static <T> List<T> acquireReportInfo(String path, String prefix, String suffix, Date startTime, Date endTime, Map<String, PatternBean> patternMap, Class<T> cls) {
-        List<T> reportList = Lists.newCopyOnWriteArrayList();
-        try {
-            Date nowTime = startTime;
-            while (DateUtils.truncatedCompareTo(nowTime, endTime, Calendar.DATE) < 1) {
-                String[] logPrefixS = prefix.split(",");
-                String date = DateFormatUtils.format(nowTime, "yyyyMMdd");
-                for (String _logPrefix : logPrefixS) {
-                    String fullPath = path + _logPrefix + date + suffix;
-                    File file = new File(fullPath);
-                    if (!file.exists()) {
-                        LOGGER.info("log path is not exists: " + file.getAbsolutePath());
-                        continue;
-                    }
-                    LOGGER.info("read log: " + file.getAbsolutePath());
-                    Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
-                    compoundReportBean(reportList, reportMap.values(), cls);
-                }
-                nowTime = DateUtils.addDays(nowTime, 1);
-            }
-        } catch (Exception e) {
-            LOGGER.error("acquire report info failure", e);
-            throw new RuntimeException(e);
-        }
-        return reportList;
-    }
-
-    /**
-     * Describe : 日志对象转换为指定类集合
-     */
-    private static <T> void compoundReportBean(List<T> reportList, Collection<Map<String, Object>> reportBeanList, Class<T> cls) throws Exception {
-        if (CollectionUtils.isEmpty(reportBeanList)) return;
-        for (Map<String, Object> reportBean : reportBeanList) {
-            T t = MapBeanUtils.mapToObject(reportBean, cls);
-            reportList.add(t);
-        }
-    }
+//    /**
+//     * Describe : 读取日志到指定类集合：List<T>
+//     */
+//    public static <T> List<T> acquireReportInfo(String path, String prefix, String suffix, Date startTime, Date endTime, Map<String, PatternBean> patternMap, Class<T> cls) {
+//        List<T> reportList = Lists.newCopyOnWriteArrayList();
+//        try {
+//            Date nowTime = startTime;
+//            while (DateUtils.truncatedCompareTo(nowTime, endTime, Calendar.DATE) < 1) {
+//                String[] logPrefixS = prefix.split(",");
+//                String date = DateFormatUtils.format(nowTime, "yyyyMMdd");
+//                for (String _logPrefix : logPrefixS) {
+//                    String fullPath = path + _logPrefix + date + suffix;
+//                    File file = new File(fullPath);
+//                    if (!file.exists()) {
+//                        LOGGER.info("log path is not exists: " + file.getAbsolutePath());
+//                        continue;
+//                    }
+//                    LOGGER.info("read log: " + file.getAbsolutePath());
+//                    Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
+//                    compoundReportBean(reportList, reportMap.values(), cls);
+//                }
+//                nowTime = DateUtils.addDays(nowTime, 1);
+//            }
+//        } catch (Exception e) {
+//            LOGGER.error("acquire report info failure", e);
+//            throw new RuntimeException(e);
+//        }
+//        return reportList;
+//    }
+//
+//    /**
+//     * Describe : 日志对象转换为指定类集合
+//     */
+//    private static <T> void compoundReportBean(List<T> reportList, Collection<Map<String, Object>> reportBeanList, Class<T> cls) throws Exception {
+//        if (CollectionUtils.isEmpty(reportBeanList)) return;
+//        for (Map<String, Object> reportBean : reportBeanList) {
+//            T t = MapBeanUtils.mapToObject(reportBean, cls);
+//            reportList.add(t);
+//        }
+//    }
 
     /**
      * Describe : 逐行读取日志，工具：LineIterator
@@ -129,10 +128,10 @@ public final class ReportHandler {
             while (lineIterator.hasNext()) {
                 String line = lineIterator.nextLine();
                 // uuid
-                String uuidNew = Done.parseAttr(NEW_UUID_PATTERN, line, 1);
-                String uuid = StringUtils.isBlank(uuidNew) ? Done.parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
+                String uuidNew = parseAttr(NEW_UUID_PATTERN, line, 1);
+                String uuid = StringUtils.isBlank(uuidNew) ? parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
                 // time
-                String time = Done.parseAttr(TIME_PATTERN, line, 1);
+                String time = parseAttr(TIME_PATTERN, line, 1);
                 // remark：reportBean
                 if (StringUtils.isBlank(uuid) || StringUtils.isBlank(time)) continue;   // 过滤掉不存在uuid与time的日志，认为是坏日志
                 if (!reportMap.containsKey(uuid)) {
@@ -149,7 +148,7 @@ public final class ReportHandler {
                     if (reportBean.get(key) != null) continue;
 
                     PatternBean patternBean = entryPattern.getValue();
-                    String value = Done.parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
+                    String value = parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
                     reportBean.put(key, value);
                 }
             }
@@ -163,16 +162,16 @@ public final class ReportHandler {
     }
 
     /**
-     * Describe : 读取日志
+     * Describe : 全部加载到内存后，再读取日志
      */
     private static Map<String, Map<String, Object>> readReport(List<String> readLines, Map<String, PatternBean> patternMap) throws Exception {
         Map<String, Map<String, Object>> reportMap = Maps.newHashMap();      // 过滤器
         for (String line : readLines) {
             // uuid
-            String uuidNew = Done.parseAttr(NEW_UUID_PATTERN, line, 1);
-            String uuid = StringUtils.isBlank(uuidNew) ? Done.parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
+            String uuidNew = parseAttr(NEW_UUID_PATTERN, line, 1);
+            String uuid = StringUtils.isBlank(uuidNew) ? parseAttr(OLD_UUID_PATTERN, line, 1) : uuidNew;
             // time
-            String time = Done.parseAttr(TIME_PATTERN, line, 1);
+            String time = parseAttr(TIME_PATTERN, line, 1);
             // remark：reportBean
             if (StringUtils.isBlank(uuid) || StringUtils.isBlank(time)) continue;   // 过滤掉不存在uuid与time的日志，认为是坏日志
             if (!reportMap.containsKey(uuid)) {
@@ -189,7 +188,7 @@ public final class ReportHandler {
                 if (reportBean.get(key) != null) continue;
 
                 PatternBean patternBean = entryPattern.getValue();
-                String value = Done.parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
+                String value = parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
                 reportBean.put(key, value);
             }
         }
@@ -199,17 +198,15 @@ public final class ReportHandler {
     /**
      * Describe : 获取文件内容到指定类集合，过滤行号：filterLineIndex
      */
-    public static <T> List<T> acquireFileObject(String src, Class<T> cls, Map<String, PatternBean> patternMap, Integer... filterLineIndex) {
+    public static List<DynamicBean> acquireFileObject(String src, Map<String, PatternBean> patternMap, Integer... filterLineIndex) {
         File file = new File(src);
         if (!file.exists()) throw new RuntimeException("log path is not exists: " + file.getAbsolutePath());
         LOGGER.info("read log: " + file.getAbsolutePath());
-        List<T> fileList = Lists.newArrayList();
+
+        List<DynamicBean> fileList = Lists.newArrayList();
         try {
             Map<Integer, Map<String, Object>> fileMap = readFile(file, patternMap, filterLineIndex);
-
-            compoundReportBean(fileList, fileMap.values(), cls);
-
-            LOGGER.info("file list size: " + fileList.size());
+            compoundReportBean(fileList, fileMap.values());
         } catch (Exception e) {
             LOGGER.error("read report failure", e);
             throw new RuntimeException(e);
@@ -235,10 +232,21 @@ public final class ReportHandler {
                 String key = entryPattern.getKey();
                 if (fileBean.get(key) != null) continue;
                 PatternBean patternBean = entryPattern.getValue();
-                String value = Done.parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
-                fileBean.put(key, value);
+                String value = parseAttr(Pattern.compile(patternBean.getValue()), line, patternBean.getIndex());
+                if (StringUtils.isNotEmpty(value)) fileBean.put(key, value);
             }
         }
         return fileMap;
+    }
+
+    /**
+     * Describe : 解析指定格式的行
+     */
+    public static String parseAttr(Pattern PATTERN, String line, int index) {
+        Matcher matcher = PATTERN.matcher(line);
+        if (matcher.find()) {
+            return matcher.group(index);
+        }
+        return null;
     }
 }

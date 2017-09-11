@@ -2,9 +2,11 @@ package com.zzc.ason.net;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.zzc.ason.util.ReflectionUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,10 @@ public final class MapBeanUtils {
 
     public static <T> T mapToObject(Map<String, Object> map, Class<T> beanClass) throws Exception {
         if (map == null || map.size() <= 0) return null;
+        Map<String, Type> classType = ReflectionUtil.acquireClassType(beanClass);
         T obj = beanClass.newInstance();
+
+
         List<Class> cls = Lists.newArrayList();
         Class oo = obj.getClass();
         while (oo != null && oo != Object.class) {      // 获取关联的所有类，本类以及所有父类
