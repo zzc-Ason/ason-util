@@ -2,12 +2,13 @@ package com.zzc.ason.util;
 
 import com.zzc.ason.common.DateFormat;
 import com.zzc.ason.common.Symbol;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
  * author : Ason
  * createTime : 2017 年 08 月 14 日
  */
+@SuppressWarnings("Duplicates")
 public final class StringUtil {
     private static final Logger LOGGER = Logger.getLogger(StringUtil.class);
 
@@ -27,8 +29,27 @@ public final class StringUtil {
         else sb.append(Symbol.COMMA + s);
     }
 
+    public static boolean compareListEquals(List list) {
+        if (CollectionUtils.isNotEmpty(list)) {
+            if (list.get(0) == null) {
+                for (Object o : list) {
+                    if (o != null) return false;
+                }
+            } else {
+                String init = list.get(0).toString();
+                for (Object o : list) {
+                    if (o == null) return false;
+                    if (!StringUtils.equals(init, o.toString())) return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static boolean compareEquals(Object... params) {
-        if (ArrayUtils.isEmpty(params)) return true;
+        if (params.length <= 0) {
+            return true;
+        }
         if (params[0] == null) {
             for (Object o : params) {
                 if (o != null) return false;

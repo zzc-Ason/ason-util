@@ -20,6 +20,9 @@ import java.util.Map;
 public final class SchemaHandler {
     private static final Logger LOGGER = Logger.getLogger(SchemaHandler.class);
 
+    /**
+     * Describe : 获取数据库信息到动态类集合：List<DynamicBean>
+     */
     public static List<DynamicBean> acquireDataFromDB(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Object... params) {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
         DatabaseUtil.initialDataSource(mysqlUrl, mysqlUser, mysqlPassword);
@@ -42,6 +45,9 @@ public final class SchemaHandler {
         return schemaBeanList;
     }
 
+    /**
+     * Describe : 未初始化数据库，获取数据库信息到动态类集合：List<DynamicBean>
+     */
     public static List<DynamicBean> acquireDataFromDB(String sql, Object... params) {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
         try {
@@ -61,6 +67,9 @@ public final class SchemaHandler {
         return schemaBeanList;
     }
 
+    /**
+     * Describe : 获取数据库信息到指定类集合：List<T>
+     */
     public static <T> List<T> acquireDataFromDB(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Class<T> cls, Object... params) {
         List<T> schemaBeanList = Lists.newCopyOnWriteArrayList();
         try {
@@ -83,6 +92,9 @@ public final class SchemaHandler {
         return schemaBeanList;
     }
 
+    /**
+     * Describe : 未初始化数据库，获取数据库信息到指定类集合：List<T>
+     */
     public static <T> List<T> acquireDataFromDB(String sql, Class<T> cls, Object... params) {
         List<T> schemaBeanList = Lists.newCopyOnWriteArrayList();
         try {
@@ -102,10 +114,16 @@ public final class SchemaHandler {
         return schemaBeanList;
     }
 
+    /**
+     * Describe : 获取指定类信息
+     */
     public static <T> T acquireEntity(String sql, Class<T> cls, String... params) {
         return DatabaseUtil.queryEntity(cls, sql, params);
     }
 
+    /**
+     * Describe : 获取指定集合信息
+     */
     public static <T> List<T> acquireEntityList(String sql, Class<T> cls, String... params) {
         return DatabaseUtil.queryEntityList(cls, sql, params);
     }

@@ -41,4 +41,27 @@ public class ZipHandler {
             throw new RuntimeException(e);
         }
     }
+
+    public static void zipEncrypt(String srcPath, String zipFile) {
+        try {
+            File file = new File(srcPath);
+            if (!file.exists()) return;
+            ArrayList<File> files = new ArrayList<File>();
+
+            if (file.isFile()) {
+                files.add(file);
+            }
+            if (file.isDirectory()) {
+                Collection<File> zipFiles = FileUtils.listFiles(file, FileFilterUtils.fileFileFilter(), null);
+                files.addAll(zipFiles);
+            }
+
+            if (!CollectionUtils.isEmpty(files)) {
+                ZipUtil.zip_list(files, zipFile);
+            }
+        } catch (Exception e) {
+            LOGGER.error("zip and encrypt file failure", e);
+            throw new RuntimeException(e);
+        }
+    }
 }
