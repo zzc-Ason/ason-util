@@ -225,7 +225,7 @@ public final class ReportHandler {
         while (lineIterator.hasNext()) {
             String line = lineIterator.nextLine();
             if (ArrayUtils.contains(filterLineIndex, ++row)) continue;  // 过滤指定行号
-            if (!fileMap.containsKey(row)) fileMap.put(row, Maps.newHashMap());
+            if (!fileMap.containsKey(row)) fileMap.put(row, Maps.<String, Object>newHashMap());
             Map<String, Object> fileBean = fileMap.get(row);
             // pattern
             for (Map.Entry<String, PatternBean> entryPattern : patternMap.entrySet()) {

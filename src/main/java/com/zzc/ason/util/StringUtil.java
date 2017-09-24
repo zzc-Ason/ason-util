@@ -2,6 +2,7 @@ package com.zzc.ason.util;
 
 import com.zzc.ason.common.DateFormat;
 import com.zzc.ason.common.Symbol;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -93,8 +94,13 @@ public final class StringUtil {
     }
 
     public static String parseFieldToStr(Object obj, String fieldName) {
-        if (obj == null) return null;
         Object value = ReflectionUtil.acquireValueByFieldName(obj, fieldName);
         return trim(parseStr(value));
+    }
+
+    public static String sha256(String value) {
+        if (value == null) return null;
+        if (StringUtils.isBlank(value)) return "";
+        return DigestUtils.sha256Hex(StringUtils.trim(value));
     }
 }

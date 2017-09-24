@@ -65,11 +65,15 @@ public final class ReflectionUtil {
 
     public static void setValueByFieldName(Object obj, String fieldName, Object value) {
         try {
-            PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
-            Method writeMethod = pd.getWriteMethod();
-            if (writeMethod == null) return;
-
-            writeMethod.invoke(obj, value);
+            Field[] declaredFields = obj.getClass().getDeclaredFields();
+            for (Field field : declaredFields) {
+                if (StringUtils.equals(field.getName(), fieldName)) {
+                    PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
+                    Method writeMethod = pd.getWriteMethod();
+                    if (writeMethod == null) return;
+                    writeMethod.invoke(obj, value);
+                }
+            }
         } catch (Exception e) {
             LOGGER.error("set value of field \"" + fieldName + "\" failure", e);
             throw new RuntimeException(e);
@@ -77,14 +81,17 @@ public final class ReflectionUtil {
     }
 
     public static Object acquireValueByFieldName(Object obj, String fieldName) {
+        if (obj == null || StringUtils.isBlank(fieldName)) return null;
         try {
-            if (obj == null) return null;
-            if (StringUtils.isBlank(fieldName)) return null;
-
-            PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
-            Method getMethod = pd.getReadMethod();
-
-            return getMethod == null ? null : getMethod.invoke(obj);
+            Field[] declaredFields = obj.getClass().getDeclaredFields();
+            for (Field field : declaredFields) {
+                if (StringUtils.equals(field.getName(), fieldName)) {
+                    PropertyDescriptor pd = new PropertyDescriptor(fieldName, obj.getClass());
+                    Method getMethod = pd.getReadMethod();
+                    return getMethod == null ? null : getMethod.invoke(obj);
+                }
+            }
+            return null;
         } catch (IntrospectionException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
