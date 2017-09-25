@@ -1,7 +1,7 @@
 package com.zzc.ason.util;
 
 import com.google.common.collect.Maps;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -16,8 +16,8 @@ import java.util.Map;
  * className : ParseXMLUtil
  * remark: xml文件解析助手
  */
+@Slf4j
 public final class ParseXMLUtil {
-    private static final Logger LOGGER = Logger.getLogger(ParseXMLUtil.class);
 
     private Map<String, Map<String, String>> itemXML = Maps.newHashMap();
 
@@ -54,12 +54,12 @@ public final class ParseXMLUtil {
         for (Iterator props = root.elementIterator(); props.hasNext(); ) {
             Element itemElem = (Element) props.next();
             if (itemElem.getName() == null || !"project".equals(itemElem.getName())) {
-                LOGGER.warn("project node is invalid. node name must be 'project'.");
+                log.warn("project node is invalid. node name must be 'project'.");
                 continue;
             }
             String projName = itemElem.attributeValue("name");
             if (projName == null || "".equals(projName.trim())) {
-                LOGGER.warn("project name is invalid.");
+                log.warn("project name is invalid.");
                 continue;
             }
             if (!itemXML.containsKey(projName.trim())) {
@@ -69,13 +69,13 @@ public final class ParseXMLUtil {
             for (Iterator node = itemElem.elementIterator(); node.hasNext(); ) {
                 Element propElem = (Element) node.next();
                 if (propElem.getName() != null && !"prop".equals(propElem.getName())) {
-                    LOGGER.warn("prop node of " + projName + " is invalid. node name must be 'prop'.");
+                    log.warn("prop node of " + projName + " is invalid. node name must be 'prop'.");
                     continue;
                 }
                 String name = propElem.attributeValue("name");
                 String value = propElem.attributeValue("value");
                 if (name == null || "".equals(name.trim()) || value == null || "".equals(value.trim())) {
-                    LOGGER.warn("name or value node is invalid.");
+                    log.warn("name or value node is invalid.");
                     continue;
                 }
                 propsXML.put(name.trim(), value.trim());

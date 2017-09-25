@@ -3,8 +3,8 @@ package com.zzc.ason.sftp;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSchException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +16,8 @@ import java.io.InputStreamReader;
  * className : ChExec
  * remark: sftp操作助手ChannelExec
  */
+@Slf4j
 public class ChExec {
-    private static final Logger LOGGER = Logger.getLogger(ChExec.class);
 
     private Channel channel;
     private ChannelExec chExec;

@@ -1,7 +1,7 @@
 package com.zzc.ason.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,8 +13,8 @@ import java.io.FileReader;
  * className : PwdUtil
  * remark: 单行密码文件读取助手
  */
+@Slf4j
 public final class PwdUtil {
-    private static final Logger LOGGER = Logger.getLogger(PwdUtil.class);
 
     public static String acquirePwd(String filePath) {
         try {
@@ -25,7 +25,7 @@ public final class PwdUtil {
                 if (StringUtils.isNotBlank(value)) return value.trim();
             }
         } catch (Exception e) {
-            LOGGER.error("Failed to load file " + filePath, e);
+            log.error("Failed to load file " + filePath, e);
             throw new RuntimeException(e);
         }
         return null;

@@ -6,7 +6,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.log4j.Logger;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("Duplicates")
 public final class StringUtil {
-    private static final Logger LOGGER = Logger.getLogger(StringUtil.class);
 
     private static final String EMPTY = "";         // empty
     private static final String NULL = "null";      // null
@@ -30,7 +28,7 @@ public final class StringUtil {
         else sb.append(Symbol.COMMA + s);
     }
 
-    public static boolean compareListEquals(List list) {
+    public static boolean equalsList(List list) {
         if (CollectionUtils.isNotEmpty(list)) {
             if (list.get(0) == null) {
                 for (Object o : list) {

@@ -1,8 +1,8 @@
 package com.zzc.ason.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.text.ParseException;
 
@@ -10,8 +10,8 @@ import java.text.ParseException;
  * author : Ason
  * createTime : 2017 年 07 月 28 日
  */
+@Slf4j
 public class Done {
-    private static final Logger LOGGER = Logger.getLogger(Done.class);
 
     public static String handlerTimeArgs(String arg) {
         if (StringUtils.isNotBlank(arg)) {
@@ -19,7 +19,7 @@ public class Done {
                 DateUtils.parseDate(arg, DateFormat.DATE_FORMAT_1);
                 return arg;
             } catch (ParseException e) {
-                LOGGER.error("startTime or endTime is invalid.");
+                log.error("startTime or endTime is invalid.");
                 throw new RuntimeException("args \"" + arg + "\" is invalid", e);
             }
         }

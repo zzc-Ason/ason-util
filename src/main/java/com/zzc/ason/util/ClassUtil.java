@@ -1,8 +1,8 @@
 package com.zzc.ason.util;
 
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -20,8 +20,8 @@ import java.util.jar.JarFile;
  * className : ClassUtil
  * remark: 获取指定包名下所有的类型
  */
+@Slf4j
 public final class ClassUtil {
-    private static final Logger LOGGER = Logger.getLogger(ClassUtil.class);
 
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
@@ -58,7 +58,7 @@ public final class ClassUtil {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("get class set failure", e);
+            log.error("get class set failure", e);
             throw new RuntimeException(e);
         }
         return classSet;
@@ -102,7 +102,7 @@ public final class ClassUtil {
         try {
             cls = Class.forName(className, isInitialized, getClassLoader());
         } catch (ClassNotFoundException e) {
-            LOGGER.error("load class failure", e);
+            log.error("load class failure", e);
             throw new RuntimeException(e);
         }
         return cls;

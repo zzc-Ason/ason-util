@@ -1,10 +1,10 @@
 package com.zzc.ason.handler;
 
 import com.zzc.ason.net.ZipUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import java.util.Collection;
  * className : ZipHandler
  * remark: 压缩工具
  */
+@Slf4j
 public class ZipHandler {
-    private static final Logger LOGGER = Logger.getLogger(ZipHandler.class);
 
     public static void zipEncrypt(String srcPath, String zipFile, String secret) {
         try {
@@ -37,7 +37,7 @@ public class ZipHandler {
                 ZipUtil.zip_encrypt_list(files, zipFile, secret);
             }
         } catch (Exception e) {
-            LOGGER.error("zip and encrypt file failure", e);
+            log.error("zip and encrypt file failure", e);
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +60,7 @@ public class ZipHandler {
                 ZipUtil.zip_list(files, zipFile);
             }
         } catch (Exception e) {
-            LOGGER.error("zip and encrypt file failure", e);
+            log.error("zip and encrypt file failure", e);
             throw new RuntimeException(e);
         }
     }

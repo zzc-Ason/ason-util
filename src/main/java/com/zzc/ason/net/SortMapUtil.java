@@ -2,8 +2,8 @@ package com.zzc.ason.net;
 
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  * className : SortMapUtil
  * remark: map排序工具
  */
+@Slf4j
 public final class SortMapUtil {
-    private static final Logger LOGGER = Logger.getLogger(SortMapUtil.class);
 
     public static <K, T> Map<K, T> sortMapByKey(Map<K, T> oriMap) {
         if (MapUtils.isEmpty(oriMap)) return null;

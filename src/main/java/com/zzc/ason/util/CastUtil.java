@@ -2,8 +2,8 @@ package com.zzc.ason.util;
 
 
 import com.zzc.ason.common.Symbol;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * author : Ason
@@ -11,8 +11,8 @@ import org.apache.log4j.Logger;
  * className : CastUtil
  * remark: 类型转换助手
  */
+@Slf4j
 public final class CastUtil {
-    private static final Logger LOGGER = Logger.getLogger(CastUtil.class);
 
     public static String rate(Integer c, Integer t) {
         Double h = 0.0;

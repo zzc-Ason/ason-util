@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.zzc.ason.bean.DynamicBean;
 import com.zzc.ason.net.MapBeanUtils;
 import com.zzc.ason.util.DatabaseUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -17,8 +17,8 @@ import java.util.Map;
  * className : SchemaHandler
  * remark: 数据库查询助手
  */
+@Slf4j
 public final class SchemaHandler {
-    private static final Logger LOGGER = Logger.getLogger(SchemaHandler.class);
 
     /**
      * Describe : 获取数据库信息到动态类集合：List<DynamicBean>
@@ -37,7 +37,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(dynamicBean);
             }
         } catch (Exception e) {
-            LOGGER.error("search database failure", e);
+            log.error("search database failure", e);
             throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
@@ -61,7 +61,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(dynamicBean);
             }
         } catch (Exception e) {
-            LOGGER.error("search database failure", e);
+            log.error("search database failure", e);
             throw new RuntimeException(e);
         }
         return schemaBeanList;
@@ -84,7 +84,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(t);
             }
         } catch (Exception e) {
-            LOGGER.error("search database failure", e);
+            log.error("search database failure", e);
             throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
@@ -108,7 +108,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(t);
             }
         } catch (Exception e) {
-            LOGGER.error("search database failure", e);
+            log.error("search database failure", e);
             throw new RuntimeException(e);
         }
         return schemaBeanList;

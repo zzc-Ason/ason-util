@@ -1,9 +1,9 @@
 package com.zzc.ason.bean;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.beans.BeanGenerator;
 import net.sf.cglib.beans.BeanMap;
-import org.apache.log4j.Logger;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -20,8 +20,8 @@ import java.util.Set;
  * className : DynamicBean
  * remark: beanMap构建的动态类
  */
+@Slf4j
 public class DynamicBean {
-    private static final Logger LOGGER = Logger.getLogger(DynamicBean.class);
 
     private Object object = null;
     private BeanMap beanMap = null;
@@ -76,7 +76,7 @@ public class DynamicBean {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("get object field failure", e);
+            log.error("get object field failure", e);
             throw new RuntimeException(e);
         }
     }

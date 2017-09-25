@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zzc.ason.bean.DynamicBean;
 import com.zzc.ason.bean.PatternBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -11,7 +12,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
  * remark: 日志文件读取助手
  */
 @SuppressWarnings("Duplicates")
+@Slf4j
 public final class ReportHandler {
-    private static final Logger LOGGER = Logger.getLogger(ReportHandler.class);
 
     private static final String UUID = "uuid";
     private static final String TIME = "time";
@@ -49,17 +49,17 @@ public final class ReportHandler {
                     String fullPath = path + _logPrefix + date + suffix;
                     File file = new File(fullPath);
                     if (!file.exists()) {
-                        LOGGER.info("log path is not exists: " + file.getAbsolutePath());
+                        log.info("log path is not exists: " + file.getAbsolutePath());
                         continue;
                     }
-                    LOGGER.info("read log: " + file.getAbsolutePath());
+                    log.info("read log: " + file.getAbsolutePath());
                     Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
                     compoundReportBean(reportList, reportMap.values());
                 }
                 nowTime = DateUtils.addDays(nowTime, 1);
             }
         } catch (Exception e) {
-            LOGGER.error("acquire report info failure", e);
+            log.error("acquire report info failure", e);
             throw new RuntimeException(e);
         }
         return reportList;
@@ -90,17 +90,17 @@ public final class ReportHandler {
 //                    String fullPath = path + _logPrefix + date + suffix;
 //                    File file = new File(fullPath);
 //                    if (!file.exists()) {
-//                        LOGGER.info("log path is not exists: " + file.getAbsolutePath());
+//                        log.info("log path is not exists: " + file.getAbsolutePath());
 //                        continue;
 //                    }
-//                    LOGGER.info("read log: " + file.getAbsolutePath());
+//                    log.info("read log: " + file.getAbsolutePath());
 //                    Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
 //                    compoundReportBean(reportList, reportMap.values(), cls);
 //                }
 //                nowTime = DateUtils.addDays(nowTime, 1);
 //            }
 //        } catch (Exception e) {
-//            LOGGER.error("acquire report info failure", e);
+//            log.error("acquire report info failure", e);
 //            throw new RuntimeException(e);
 //        }
 //        return reportList;
@@ -153,7 +153,7 @@ public final class ReportHandler {
                 }
             }
         } catch (IOException e) {
-            LOGGER.error("read report failure", e);
+            log.error("read report failure", e);
             throw new RuntimeException(e);
         } finally {
             if (lineIterator != null) lineIterator.close();
@@ -201,14 +201,14 @@ public final class ReportHandler {
     public static List<DynamicBean> acquireFileObject(String src, Map<String, PatternBean> patternMap, Integer... filterLineIndex) {
         File file = new File(src);
         if (!file.exists()) throw new RuntimeException("log path is not exists: " + file.getAbsolutePath());
-        LOGGER.info("read log: " + file.getAbsolutePath());
+        log.info("read log: " + file.getAbsolutePath());
 
         List<DynamicBean> fileList = Lists.newArrayList();
         try {
             Map<Integer, Map<String, Object>> fileMap = readFile(file, patternMap, filterLineIndex);
             compoundReportBean(fileList, fileMap.values());
         } catch (Exception e) {
-            LOGGER.error("read report failure", e);
+            log.error("read report failure", e);
             throw new RuntimeException(e);
         }
         return fileList;

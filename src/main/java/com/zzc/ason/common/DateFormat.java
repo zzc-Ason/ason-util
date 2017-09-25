@@ -1,5 +1,6 @@
 package com.zzc.ason.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Calendar;
@@ -10,8 +11,8 @@ import java.util.Date;
  * createTime : 2017 年 07 月 25 日
  * className : DateFormat
  */
+@Slf4j
 public final class DateFormat {
-    private static final org.apache.log4j.Logger LOGGER = org.apache.log4j.Logger.getLogger(DateFormat.class);
 
     public static final String DATE_FORMAT_1 = "yyyyMMdd";                  // 时间格式1
     public static final String DATE_FORMAT_2 = "yyyy-MM-dd HH:mm:ss";      // 时间格式2
@@ -52,7 +53,7 @@ public final class DateFormat {
 
     public static int differentYears(Date startTime, Date endTime) {
         if (DateUtils.truncatedCompareTo(startTime, endTime, Calendar.DATE) > 0) {
-            LOGGER.error("\"" + startTime + "\" must before \"" + endTime + "\"");
+            log.error("\"" + startTime + "\" must before \"" + endTime + "\"");
             return -1;
         }
         for (int i = 1; ; i++) {

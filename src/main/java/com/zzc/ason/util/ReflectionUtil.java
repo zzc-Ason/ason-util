@@ -1,8 +1,8 @@
 package com.zzc.ason.util;
 
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -16,16 +16,15 @@ import java.util.Map;
  * author : Ason
  * createTime : 2017 年 07 月 22 日 下午 3:05
  */
+@Slf4j
 public final class ReflectionUtil {
-
-    private static final Logger LOGGER = Logger.getLogger(ReflectionUtil.class);
 
     public static <T> T newInstance(Class<T> cls) {
         T instance;
         try {
             instance = cls.newInstance();
         } catch (Exception e) {
-            LOGGER.error("new instance failure", e);
+            log.error("new instance failure", e);
             throw new RuntimeException(e);
         }
         return instance;
@@ -36,7 +35,7 @@ public final class ReflectionUtil {
             Class<?> cls = Class.forName(className);
             return newInstance(cls);
         } catch (ClassNotFoundException e) {
-            LOGGER.error("new instance failure", e);
+            log.error("new instance failure", e);
             throw new RuntimeException(e);
         }
     }
@@ -47,7 +46,7 @@ public final class ReflectionUtil {
             method.setAccessible(true);
             result = method.invoke(obj, args);
         } catch (Exception e) {
-            LOGGER.error("invoke method failure", e);
+            log.error("invoke method failure", e);
             throw new RuntimeException(e);
         }
         return result;
@@ -58,7 +57,7 @@ public final class ReflectionUtil {
             field.setAccessible(true);
             field.set(obj, value);
         } catch (IllegalAccessException e) {
-            LOGGER.error("set field failure", e);
+            log.error("set field failure", e);
             throw new RuntimeException(e);
         }
     }
@@ -75,7 +74,7 @@ public final class ReflectionUtil {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("set value of field \"" + fieldName + "\" failure", e);
+            log.error("set value of field \"" + fieldName + "\" failure", e);
             throw new RuntimeException(e);
         }
     }

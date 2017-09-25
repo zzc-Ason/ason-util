@@ -1,12 +1,12 @@
 package com.zzc.ason.util;
 
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Collection;
@@ -18,8 +18,8 @@ import java.util.LinkedList;
  * className : FileUtil
  * remark: 文件操作工具
  */
+@Slf4j
 public final class FileUtil {
-    private static final Logger LOGGER = Logger.getLogger(FileUtil.class);
 
     public static Collection<File> listFiles(String srcPath, String prefix, String suffix) {
         Collection<File> collection = CollectionUtils.EMPTY_COLLECTION;
@@ -80,7 +80,7 @@ public final class FileUtil {
                 }
             }
         } else {
-            LOGGER.info("file is not exists!");
+            log.info("file is not exists!");
         }
         return list_file;
     }

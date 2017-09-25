@@ -3,6 +3,7 @@ package com.zzc.ason.net;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zzc.ason.util.ReflectionUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -16,6 +17,7 @@ import java.util.Map;
  * className : MapBeanUtils
  * remark: map与javaBean转换助手
  */
+@Slf4j
 public final class MapBeanUtils {
 
     public static <T> T mapToObject(Map<String, Object> map, Class<T> beanClass) throws Exception {

@@ -1,11 +1,13 @@
 package com.zzc.ason.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * author : Ason
  * createTime : 2017 年 08 月 07 日
  */
+@Slf4j
 public class Symbol {
 
     public static final String COMMA = ",";         // 逗号

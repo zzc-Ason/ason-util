@@ -1,8 +1,8 @@
 package com.zzc.ason.sftp;
 
 import com.jcraft.jsch.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.util.Properties;
 
@@ -12,8 +12,8 @@ import java.util.Properties;
  * className : ChannelFactory
  * remark: sftp操作助手ChannelFactory
  */
+@Slf4j
 public class ChannelFactory {
-    private static final Logger LOGGER = Logger.getLogger(ChannelFactory.class);
 
     private String ftpHost;
     private String ftpUserName;
@@ -49,7 +49,7 @@ public class ChannelFactory {
         localUserInfo ui = new localUserInfo();
         session.setUserInfo(ui);
         session.setTimeout(timeout);        // 设置timeout时间
-        LOGGER.info("Connected successfully to ftpHost = " + ftpHost + ",as ftpUserName = " + ftpUserName);
+        log.info("Connected successfully to ftpHost = " + ftpHost + ",as ftpUserName = " + ftpUserName);
         return session;
     }
 

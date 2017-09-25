@@ -3,6 +3,7 @@ package com.zzc.ason.net;
 import com.fasterxml.uuid.EthernetAddress;
 import com.fasterxml.uuid.Generators;
 import com.fasterxml.uuid.impl.TimeBasedGenerator;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import java.util.UUID;
  * className : KeyUtil
  * remark: 按序产生UUID工具
  */
+@Slf4j
 public class KeyUtil {
 
     public static String generatorTimeUUID() {

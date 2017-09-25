@@ -2,8 +2,8 @@ package com.zzc.ason.net;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import sun.misc.BASE64Encoder;
 
 import javax.activation.DataHandler;
@@ -22,8 +22,8 @@ import java.util.Map.Entry;
  * className : EmailUtil
  * remark: 邮件发送助手
  */
+@Slf4j
 public final class EmailUtil {
-    private static final Logger LOGGER = Logger.getLogger(EmailUtil.class);
 
     private String protocol = "smtp"; // 邮件传输协议
     private String smtp;               // 邮件服务器主机名
@@ -112,7 +112,7 @@ public final class EmailUtil {
             ts.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
             ts.close();
         } catch (Exception e) {
-            LOGGER.error("send email failure", e);
+            log.error("send email failure", e);
             throw new RuntimeException(e);
         }
     }

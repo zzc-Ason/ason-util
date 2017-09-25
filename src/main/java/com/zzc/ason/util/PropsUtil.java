@@ -1,7 +1,7 @@
 package com.zzc.ason.util;
 
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import java.util.Properties;
  * className : PropsUtil
  * remark: 属性文件读取类
  */
+@Slf4j
 public final class PropsUtil {
-    private static final Logger LOGGER = Logger.getLogger(PropsUtil.class);
 
     public static Properties loadProps(String fileName) {
         Properties props = null;
@@ -28,13 +28,13 @@ public final class PropsUtil {
             props = new Properties();
             props.load(is);
         } catch (IOException e) {
-            LOGGER.error("load properties file failure", e);
+            log.error("load properties file failure", e);
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    LOGGER.error("close input stream failure", e);
+                    log.error("close input stream failure", e);
                 }
             }
         }

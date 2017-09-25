@@ -1,6 +1,7 @@
 package com.zzc.ason.net;
 
 import com.zzc.ason.common.Symbol;
+import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
@@ -17,6 +18,7 @@ import java.util.List;
  * className : ZipUtil
  * remark: 文件压缩工具
  */
+@Slf4j
 public final class ZipUtil {
 
     public static void zip(File file, String destFile) throws ZipException {

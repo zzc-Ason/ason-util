@@ -4,8 +4,8 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpATTRS;
 import com.zzc.ason.util.FileUtil;
 import com.zzc.ason.util.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -18,8 +18,8 @@ import java.util.Vector;
  * className : ChSftp
  * remark: sftp操作助手ChannelSftp
  */
+@Slf4j
 public class ChSftp {
-    private static final Logger LOGGER = Logger.getLogger(ChSftp.class);
 
     private String srcBaseFile;
     private String dstBaseFile;
@@ -42,36 +42,36 @@ public class ChSftp {
         String srcFullPath = srcBaseFile + src;
         File file = FileUtils.getFile(srcFullPath);
         if (!file.exists()) {
-            LOGGER.info("src file path is not exists.");
+            log.info("src file path is not exists.");
             return;
         }
         String dstFullPath = dstBaseFile + dst;
         if (!isDirExist(dstFullPath)) {
-            LOGGER.info("create remote server file path: " + dstFullPath);
+            log.info("create remote server file path: " + dstFullPath);
             chSftp.mkdir(dstFullPath);
         }
-        LOGGER.info("start to upload file \"" + srcFullPath + "\" to \"" + dstFullPath + "\"");
+        log.info("start to upload file \"" + srcFullPath + "\" to \"" + dstFullPath + "\"");
         if (file.isDirectory()) {
             LinkedList<File> srcFiles = FileUtil.traverseFolder(srcFullPath);
             for (File srcFile : srcFiles) {
-                LOGGER.info("upload file: " + srcFile.getAbsolutePath());
+                log.info("upload file: " + srcFile.getAbsolutePath());
                 chSftp.put(srcFile.getAbsolutePath(), dstFullPath, ChannelSftp.OVERWRITE);
             }
         }
         if (file.isFile()) {
-            LOGGER.info("upload file: " + file.getAbsolutePath());
+            log.info("upload file: " + file.getAbsolutePath());
             chSftp.put(srcFullPath, dstFullPath, ChannelSftp.OVERWRITE);
         }
-        LOGGER.info("file upload over.");
+        log.info("file upload over.");
     }
 
     public void rmDir(String dst) throws Exception {
         String fullPath = dstBaseFile + dst;
         if (!isDirExist(fullPath)) {
-            LOGGER.info("remote server file path is not exists.");
+            log.info("remote server file path is not exists.");
             return;
         }
-        LOGGER.info("start to remove remote file: " + fullPath);
+        log.info("start to remove remote file: " + fullPath);
         Vector ls = chSftp.ls(fullPath);
         if (!ls.isEmpty()) {
             ListIterator listIterator = ls.listIterator();
@@ -91,7 +91,7 @@ public class ChSftp {
                 }
             }
         }
-        LOGGER.info("remove dir over: " + fullPath);
+        log.info("remove dir over: " + fullPath);
     }
 
     public boolean isDirExist(String directory) throws Exception {
