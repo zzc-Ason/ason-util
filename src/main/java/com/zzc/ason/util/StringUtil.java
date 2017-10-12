@@ -7,6 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,9 +24,10 @@ public final class StringUtil {
     private static final String NULL = "null";      // null
     public static final String BLANK = " ";         // 空格
 
-    public static void jointStr(StringBuilder sb, String s) {
+    public static StringBuilder jointStr(StringBuilder sb, String s) {
         if (StringUtils.isBlank(sb.toString())) sb.append(s);
         else sb.append(Symbol.COMMA + s);
+        return sb;
     }
 
     public static boolean equalsList(List list) {
@@ -100,5 +102,26 @@ public final class StringUtil {
         if (value == null) return null;
         if (StringUtils.isBlank(value)) return "";
         return DigestUtils.sha256Hex(StringUtils.trim(value));
+    }
+
+    public static Integer parseInteger(Object source) {
+        String value = parseStr(source);
+        return StringUtils.isBlank(value) ? null : Integer.valueOf(value);
+    }
+
+    public static Long parseLong(Object source) {
+        String value = parseStr(source);
+        return StringUtils.isBlank(value) ? null : Long.valueOf(value);
+    }
+
+    public static Double parseDouble(Object source) {
+        String value = parseStr(source);
+        return StringUtils.isBlank(value) ? null : Double.valueOf(value);
+    }
+
+    public static BigDecimal parseBigDecimal(Object source) {
+        String value = parseStr(source);
+        Double dValue = StringUtils.isBlank(value) ? null : Double.valueOf(value);
+        return dValue == null ? null : BigDecimal.valueOf(dValue);
     }
 }

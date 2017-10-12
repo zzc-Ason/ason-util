@@ -1,7 +1,10 @@
 package com.zzc.ason.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.*;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +31,54 @@ public final class DateFormat {
     public static final String DATE = "dd";           // 日期
 
     public static final String[] DATE_FORMAT_PATTERN = new String[]{DATE_FORMAT_1, DATE_FORMAT_2, DATE_FORMAT_3, DATE_FORMAT_4, DATE_FORMAT_5, DATE_FORMAT_6, DATE_FORMAT_7, DATE_FORMAT_8};    // 时间解析格式
+
+    public static int daysBetween(Date startTime, Date endTime) {
+        String startDateTime = DateFormatUtils.format(startTime, DATE_FORMAT_6);
+        String endDateTime = DateFormatUtils.format(endTime, DATE_FORMAT_6);
+        return daysBetween(startDateTime, endDateTime);
+    }
+
+    public static int daysBetween(String startTime, String endTime) {
+        DateTime startDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(startTime);
+        DateTime endDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(endTime);
+        return Days.daysBetween(startDateTime, endDateTime).getDays();
+    }
+
+    public static int yearsBetween(Date startTime, Date endTime) {
+        String startDateTime = DateFormatUtils.format(startTime, DATE_FORMAT_6);
+        String endDateTime = DateFormatUtils.format(endTime, DATE_FORMAT_6);
+        return yearsBetween(startDateTime, endDateTime);
+    }
+
+    public static int yearsBetween(String startTime, String endTime) {
+        DateTime startDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(startTime);
+        DateTime endDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(endTime);
+        return Years.yearsBetween(startDateTime, endDateTime).getYears();
+    }
+
+    public static int minutesBetween(Date startTime, Date endTime) {
+        String startDateTime = DateFormatUtils.format(startTime, DATE_FORMAT_2);
+        String endDateTime = DateFormatUtils.format(endTime, DATE_FORMAT_2);
+        return minutesBetween(startDateTime, endDateTime);
+    }
+
+    public static int minutesBetween(String startTime, String endTime) {
+        DateTime startDateTime = DateTimeFormat.forPattern(DATE_FORMAT_2).parseDateTime(startTime);
+        DateTime endDateTime = DateTimeFormat.forPattern(DATE_FORMAT_2).parseDateTime(endTime);
+        return Minutes.minutesBetween(startDateTime, endDateTime).getMinutes();
+    }
+
+    public static int secondsBetween(Date startTime, Date endTime) {
+        String startDateTime = DateFormatUtils.format(startTime, DATE_FORMAT_2);
+        String endDateTime = DateFormatUtils.format(endTime, DATE_FORMAT_2);
+        return secondsBetween(startDateTime, endDateTime);
+    }
+
+    public static int secondsBetween(String startTime, String endTime) {
+        DateTime startDateTime = DateTimeFormat.forPattern(DATE_FORMAT_2).parseDateTime(startTime);
+        DateTime endDateTime = DateTimeFormat.forPattern(DATE_FORMAT_2).parseDateTime(endTime);
+        return Seconds.secondsBetween(startDateTime, endDateTime).getSeconds();
+    }
 
     public static int differentDays(Calendar startTimeCalendar, Calendar endTimeCalendar) {
         int day1 = startTimeCalendar.get(Calendar.DAY_OF_YEAR);
@@ -69,9 +120,4 @@ public final class DateFormat {
         int rs = DateUtils.truncatedCompareTo(compareTime, time, Calendar.DATE);
         return rs >= 0 ? differentYears(time, compareTime) : differentYears(compareTime, time);
     }
-
-//    public static void main(String[] args) throws ParseException {
-//        Date date = DateUtils.parseDate("2017-05-09 23:04:11", DATE_FORMAT_PATTERN);
-//        System.out.println(beforePresentYears(date, 30));
-//    }
 }
