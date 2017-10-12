@@ -6,7 +6,7 @@
 
     <groupId>com.zzc</groupId>
     <artifactId>ason-util</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 
     <packaging>jar</packaging>
 
@@ -21,37 +21,37 @@
     </properties>
 
     <dependencies>
+        <!-- ason-pom -->
         <dependency>
             <groupId>cn.wxson</groupId>
             <artifactId>ason-pom</artifactId>
             <version>1.0.0</version>
         </dependency>
-
+        <!-- commons-dbutils -->
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
             <version>1.6</version>
         </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
+        <!-- jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.8.9</version>
         </dependency>
+        <!-- java-uuid-generator -->
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
             <artifactId>java-uuid-generator</artifactId>
             <version>3.1.4</version>
         </dependency>
+        <!-- jsch -->
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.54</version>
         </dependency>
+        <!-- expect4j -->
         <dependency>
             <groupId>com.github.cverges</groupId>
             <artifactId>expect4j</artifactId>

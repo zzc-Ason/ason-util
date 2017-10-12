@@ -1,8 +1,9 @@
 package com.zzc.ason.util;
 
 import com.google.common.collect.Lists;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -21,16 +22,14 @@ import java.util.Map;
  */
 @Slf4j
 public final class DatabaseUtil {
-
     private static final QueryRunner QUERY_RUNNER = new QueryRunner();
     private static ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<Connection>();
-    private static BasicDataSource dataSource;
+    private static HikariDataSource dataSource;
     private static String _driverClassName = "com.mysql.jdbc.Driver";
-    private static Integer _initialSize = 3;
-    private static Integer _maxActive = 2;
-    private static Integer _maxIdle = 2;
+    private static Integer _idleTimeout = 600000;
+    private static Integer _maxLifetime = 1800000;
+    private static Integer _maximumPoolSize = 2;
     private static Integer _minIdle = 1;
-    private static Integer _maxWaitMillis = 60 * 1000;
 
     private static ThreadLocal<Boolean> isTransactionThreadLocal = new ThreadLocal<Boolean>() {
         @Override
@@ -39,66 +38,41 @@ public final class DatabaseUtil {
         }
     };
 
-    private DatabaseUtil() {
-    }
-
     public static void initialDataSource(String host, String user, String password) {
-        initialDataSource(host, user, password, _driverClassName, _initialSize, _maxActive, _maxIdle, _minIdle, _maxWaitMillis);
+        initialDataSource(host, user, password, _idleTimeout, _maxLifetime, _maximumPoolSize, _minIdle);
     }
 
     public static void initialDataSource(String host, String user, String password, String driverClassName) {
-        initialDataSource(host, user, password, driverClassName, _initialSize, _maxActive, _maxIdle, _minIdle, _maxWaitMillis);
+        initialDataSource(host, user, password, driverClassName, _idleTimeout, _maxLifetime, _maximumPoolSize, _minIdle);
     }
 
-    public static void initialDataSource(String host, String user, String password, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
-        initialDataSource(host, user, password, _driverClassName, initialSize, maxActive, maxIdle, minIdle, maxWaitMillis);
+    public static void initialDataSource(String host, String user, String password, Integer idleTimeout, Integer maxLifetime, Integer maximumPoolSize, Integer minIdle) {
+        initialDataSource(host, user, password, _driverClassName, idleTimeout, maxLifetime, maximumPoolSize, minIdle);
     }
 
-    public static void initialDataSource(String host, String user, String password, String driverClassName, Integer initialSize, Integer maxActive, Integer maxIdle, Integer minIdle, Integer maxWaitMillis) {
+    public static void initialDataSource(String host, String user, String password, String driverClassName, Integer idleTimeout, Integer maxLifetime, Integer maximumPoolSize, Integer minIdle) {
         try {
-            dataSource = acquireDataSource();
-            // 为数据源实例指定必须的属性
-            dataSource.setUrl(host);
-            dataSource.setUsername(user);
-            dataSource.setPassword(password);
-            dataSource.setDriverClassName(driverClassName);
-            // 指定数据库连接池中初始化连接数的个数
-            dataSource.setInitialSize(initialSize);
-            // 指定最大连接数：同一时刻可以同时向数据库申请的连接数,默认为8.
-            dataSource.setMaxActive(maxActive);
-            // 指定最大连接数:在数据库连接池中保存的最多的空闲连接的数量,默认为8.
-            dataSource.setMaxIdle(maxIdle);
-            // 指定最小连接数:在数据库连接池中保存的最少的空闲连接的数量,默认为0.
-            dataSource.setMinIdle(minIdle);
-            // 等待数据库连接池分配连接的最长时间。单位为毫秒。超出时间将抛出异常.默认为-1.表示永不超时.
-            dataSource.setMaxWait(maxWaitMillis);
-            // 连接被认为是被泄露（超时）时，是否可以被删除
-            dataSource.setRemoveAbandoned(true);
-            // 泄露的连接可以被删除的超时值，单位秒
-            dataSource.setRemoveAbandonedTimeout(180);
-            // SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录
-            dataSource.setValidationQuery("select 1");
-            //  向调用者输出“链接”资源时，是否检测有效性，如果无效则从连接池中移除，并尝试获取继续获取。默认为false。注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
-            dataSource.setTestOnBorrow(false);
-            // 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除。默认为false。注意: 设置为true后如果要生效,validationQuery参数必须设置为非空字符串
-            dataSource.setTestOnReturn(true);
-            //  “空闲链接”检测线程，检测的周期，毫秒数。如果为负值，表示不运行“检测线程”。单位毫秒，默认为-1.
-            dataSource.setTimeBetweenEvictionRunsMillis(30000);
-            // 连接空闲的最小时间，达到此值后空闲连接将可能会被移除。负值(-1)表示不移除。单位毫秒，默认为30分钟.
-            dataSource.setMinEvictableIdleTimeMillis(1800000);
-            // 对于“空闲链接”检测线程而言，每次检测的链接资源的个数。默认为3.
-            dataSource.setNumTestsPerEvictionRun(3);
-            // 指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除.
-            dataSource.setTestWhileIdle(true);
-            log.info("initial data source over. connection url: " + dataSource.getUrl());
+            HikariConfig hikariConfig = new HikariConfig();
+            hikariConfig.setJdbcUrl(host);
+            hikariConfig.setUsername(user);
+            hikariConfig.setPassword(password);
+            hikariConfig.setDriverClassName(driverClassName);
+            hikariConfig.setIdleTimeout(idleTimeout);
+            hikariConfig.setMaxLifetime(maxLifetime);
+            hikariConfig.setMaximumPoolSize(maximumPoolSize);
+            hikariConfig.setMinimumIdle(minIdle);
+            hikariConfig.setConnectionTestQuery("select 1");
+            hikariConfig.setConnectionTimeout(30000);
+            dataSource = acquireDataSource(hikariConfig);
+            log.info("initial data source over. connection url: " + hikariConfig.getJdbcUrl());
         } catch (Exception e) {
             log.error("initial database connection failure", e);
             throw new RuntimeException(e);
         }
     }
 
-    private static BasicDataSource acquireDataSource() {
-        if (dataSource == null || dataSource.isClosed()) dataSource = new BasicDataSource();
+    private static HikariDataSource acquireDataSource(HikariConfig hikariConfig) {
+        if (dataSource == null || dataSource.isClosed()) dataSource = new HikariDataSource(hikariConfig);
         return dataSource;
     }
 
@@ -290,7 +264,7 @@ public final class DatabaseUtil {
             try {
                 dataSource.close();
                 log.info("close data source.");
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 log.error("close data source failure", e);
                 throw new RuntimeException(e);
             }
