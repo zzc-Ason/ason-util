@@ -49,7 +49,7 @@ public class ChannelFactory {
         localUserInfo ui = new localUserInfo();
         session.setUserInfo(ui);
         session.setTimeout(timeout);        // 设置timeout时间
-        log.info("Connected successfully to ftpHost = " + ftpHost + ",as ftpUserName = " + ftpUserName);
+        log.info("[connected successfully to ftpHost = " + ftpHost + ",as ftpUserName = " + ftpUserName + "]");
         return session;
     }
 

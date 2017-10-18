@@ -12,7 +12,7 @@ public final class PathUtil {
     public static <T> String acquireItemPath(Class<T> cls) {
         final String basePath = cls.getProtectionDomain().getCodeSource().getLocation().getPath();
         final String filePath = basePath.substring(0, basePath.lastIndexOf("/") + 1);
-        log.info("acquire item filePath: " + filePath);
+        log.info("[acquire item filePath is " + filePath + "]");
         return filePath;
     }
 }

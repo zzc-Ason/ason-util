@@ -42,36 +42,36 @@ public class ChSftp {
         String srcFullPath = srcBaseFile + src;
         File file = FileUtils.getFile(srcFullPath);
         if (!file.exists()) {
-            log.info("src file path is not exists.");
+            log.info("[file path is not exists: " + src + "]");
             return;
         }
         String dstFullPath = dstBaseFile + dst;
         if (!isDirExist(dstFullPath)) {
-            log.info("create remote server file path: " + dstFullPath);
+            log.info("[create remote server file path: " + dstFullPath + "]");
             chSftp.mkdir(dstFullPath);
         }
-        log.info("start to upload file \"" + srcFullPath + "\" to \"" + dstFullPath + "\"");
+        log.info("[start to upload file \"" + srcFullPath + "\" to \"" + dstFullPath + "\"]");
         if (file.isDirectory()) {
             LinkedList<File> srcFiles = FileUtil.traverseFolder(srcFullPath);
             for (File srcFile : srcFiles) {
-                log.info("upload file: " + srcFile.getAbsolutePath());
+                log.info("[upload file path is " + srcFile.getAbsolutePath() + "]");
                 chSftp.put(srcFile.getAbsolutePath(), dstFullPath, ChannelSftp.OVERWRITE);
             }
         }
         if (file.isFile()) {
-            log.info("upload file: " + file.getAbsolutePath());
+            log.info("[upload file path is " + file.getAbsolutePath() + "]");
             chSftp.put(srcFullPath, dstFullPath, ChannelSftp.OVERWRITE);
         }
-        log.info("file upload over.");
+        log.info("[file upload over]");
     }
 
     public void rmDir(String dst) throws Exception {
         String fullPath = dstBaseFile + dst;
         if (!isDirExist(fullPath)) {
-            log.info("remote server file path is not exists.");
+            log.info("[remote server file path is not exists]");
             return;
         }
-        log.info("start to remove remote file: " + fullPath);
+        log.info("[start to remove remote file is " + fullPath + "]");
         Vector ls = chSftp.ls(fullPath);
         if (!ls.isEmpty()) {
             ListIterator listIterator = ls.listIterator();
@@ -91,7 +91,7 @@ public class ChSftp {
                 }
             }
         }
-        log.info("remove dir over: " + fullPath);
+        log.info("[remove dir over is " + fullPath + "]");
     }
 
     public boolean isDirExist(String directory) throws Exception {

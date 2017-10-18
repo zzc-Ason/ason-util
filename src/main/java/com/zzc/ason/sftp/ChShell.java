@@ -46,7 +46,7 @@ public class ChShell {
         if (expect == null) {       // 如果expect返回为0，说明登入没有成功
             return false;
         }
-        log.info("start to upload file to seafile.");
+        log.info("[start to upload file to seafile]");
         Closure closure = new Closure() {
             public void run(ExpectState expectState) throws Exception {
                 buffer.append(expectState.getBuffer());     // buffer is string buffer for appending output of executed command

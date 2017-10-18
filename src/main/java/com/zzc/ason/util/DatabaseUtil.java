@@ -39,11 +39,15 @@ public final class DatabaseUtil {
     };
 
     public static void initialDataSource(String host, String user, String password) {
-        initialDataSource(host, user, password, _idleTimeout, _maxLifetime, _maximumPoolSize, _minIdle);
+        initialDataSource(host, user, password, _maximumPoolSize, _minIdle);
     }
 
     public static void initialDataSource(String host, String user, String password, String driverClassName) {
         initialDataSource(host, user, password, driverClassName, _idleTimeout, _maxLifetime, _maximumPoolSize, _minIdle);
+    }
+
+    public static void initialDataSource(String host, String user, String password, Integer maximumPoolSize, Integer minIdle) {
+        initialDataSource(host, user, password, _idleTimeout, _maxLifetime, maximumPoolSize, minIdle);
     }
 
     public static void initialDataSource(String host, String user, String password, Integer idleTimeout, Integer maxLifetime, Integer maximumPoolSize, Integer minIdle) {
@@ -64,7 +68,7 @@ public final class DatabaseUtil {
             hikariConfig.setConnectionTestQuery("select 1");
             hikariConfig.setConnectionTimeout(30000);
             dataSource = acquireDataSource(hikariConfig);
-            log.info("initial data source over. connection url: " + hikariConfig.getJdbcUrl());
+            log.info("[initial data source over] [connection url is " + hikariConfig.getJdbcUrl() + "]");
         } catch (Exception e) {
             log.error("initial database connection failure", e);
             throw new RuntimeException(e);
@@ -263,7 +267,7 @@ public final class DatabaseUtil {
         if (dataSource != null) {
             try {
                 dataSource.close();
-                log.info("close data source.");
+                log.info("[close data source]");
             } catch (Exception e) {
                 log.error("close data source failure", e);
                 throw new RuntimeException(e);

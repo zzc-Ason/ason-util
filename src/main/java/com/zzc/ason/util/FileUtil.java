@@ -80,7 +80,7 @@ public final class FileUtil {
                 }
             }
         } else {
-            log.info("file is not exists!");
+            log.info("[file is not exists]");
         }
         return list_file;
     }

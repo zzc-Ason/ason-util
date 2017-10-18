@@ -49,10 +49,10 @@ public final class ReportHandler {
                     String fullPath = path + _logPrefix + date + suffix;
                     File file = new File(fullPath);
                     if (!file.exists()) {
-                        log.info("log path is not exists: " + file.getAbsolutePath());
+                        log.info("[log path is not exists: " + file.getAbsolutePath() + "]");
                         continue;
                     }
-                    log.info("read log: " + file.getAbsolutePath());
+                    log.info("[read log path is " + file.getAbsolutePath() + "]");
                     Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
                     compoundReportBean(reportList, reportMap.values());
                 }
@@ -200,8 +200,8 @@ public final class ReportHandler {
      */
     public static List<DynamicBean> acquireFileObject(String src, Map<String, PatternBean> patternMap, Integer... filterLineIndex) {
         File file = new File(src);
-        if (!file.exists()) throw new RuntimeException("log path is not exists: " + file.getAbsolutePath());
-        log.info("read log: " + file.getAbsolutePath());
+        if (!file.exists()) throw new RuntimeException("[log path is not exists: " + file.getAbsolutePath() + "]");
+        log.info("[read log path is " + file.getAbsolutePath() + "]");
 
         List<DynamicBean> fileList = Lists.newArrayList();
         try {
