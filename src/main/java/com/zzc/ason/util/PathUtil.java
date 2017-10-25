@@ -1,6 +1,9 @@
 package com.zzc.ason.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 
 /**
  * author : Ason
@@ -14,5 +17,11 @@ public final class PathUtil {
         final String filePath = basePath.substring(0, basePath.lastIndexOf("/") + 1);
         log.info("[acquire item filePath is " + filePath + "]");
         return filePath;
+    }
+
+    public static void deleteQuietly(String fillPath) {
+        File file = FileUtils.getFile(fillPath);
+        if (file.exists()) FileUtils.deleteQuietly(file);
+        log.info("[delete dir over] [dir is: " + fillPath + "]");
     }
 }

@@ -23,6 +23,7 @@ public class Symbol {
     public static final String WINDOWS_SEPARATOR = "\\";   // windows分隔符
     public static final String MASK = "****************";  // 掩码
     public static final String SINGLE_MASK = "*";           // 单掩码
+    public static final String VERTICAL_BAR = "|";           // 竖线
 
     public static String mask(Integer count) {
         StringBuilder sb = new StringBuilder(StringUtils.EMPTY);

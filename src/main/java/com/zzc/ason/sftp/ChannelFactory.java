@@ -24,6 +24,20 @@ public class ChannelFactory {
     private Session session = null;
     private Channel channel = null;
 
+    public ChannelFactory(String ftpHost, String ftpUserName, String ftpPassword) {
+        this.ftpHost = ftpHost;
+        this.ftpUserName = ftpUserName;
+        this.ftpPassword = ftpPassword;
+    }
+
+    public ChannelFactory(String ftpHost, String ftpUserName, String ftpPassword, String port) throws JSchException {
+        this.ftpHost = ftpHost;
+        this.ftpUserName = ftpUserName;
+        this.ftpPassword = ftpPassword;
+        this.port = port;
+        createSession(60000);
+    }
+
     public ChannelFactory(String ftpHost, String ftpUserName, String ftpPassword, String port, String ftpLocation) throws Exception {
         this.ftpHost = ftpHost;
         this.ftpUserName = ftpUserName;

@@ -13,6 +13,19 @@ import java.text.ParseException;
 @Slf4j
 public class Done {
 
+    public static String handlerTimeArgs(String arg, String pattern) {
+        if (StringUtils.isNotBlank(arg)) {
+            try {
+                DateUtils.parseDate(arg, pattern);
+                return arg;
+            } catch (ParseException e) {
+                log.error("startTime or endTime is invalid.");
+                throw new RuntimeException("args \"" + arg + "\" is invalid", e);
+            }
+        }
+        return null;
+    }
+
     public static String handlerTimeArgs(String arg) {
         if (StringUtils.isNotBlank(arg)) {
             try {
