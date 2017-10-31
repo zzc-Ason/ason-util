@@ -23,7 +23,7 @@ public final class SchemaHandler {
     /**
      * Describe : 获取数据库信息到动态类集合：List<DynamicBean>
      */
-    public static List<DynamicBean> acquireDataFromDB(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Object... params) {
+    public static List<DynamicBean> acquireDataByDriver(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Object... params) {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
         DatabaseUtil.initialDataSource(mysqlUrl, mysqlUser, mysqlPassword);
         try {
@@ -48,7 +48,7 @@ public final class SchemaHandler {
     /**
      * Describe : 未初始化数据库，获取数据库信息到动态类集合：List<DynamicBean>
      */
-    public static List<DynamicBean> acquireDataFromDB(String sql, Object... params) {
+    public static List<DynamicBean> acquireData(String sql, Object... params) {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
         try {
             List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
