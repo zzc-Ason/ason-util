@@ -52,14 +52,14 @@ public final class ReportHandler {
                         log.info("[log path is not exists: " + file.getAbsolutePath() + "]");
                         continue;
                     }
-                    log.info("[read log path is " + file.getAbsolutePath() + "]");
+                    log.debug("[read log path is " + file.getAbsolutePath() + "]");
                     Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
                     compoundReportBean(reportList, reportMap.values());
                 }
                 nowTime = DateUtils.addDays(nowTime, 1);
             }
         } catch (Exception e) {
-            log.error("acquire report info failure", e);
+            log.error("[acquire report info failure]");
             throw new RuntimeException(e);
         }
         return reportList;
@@ -90,10 +90,10 @@ public final class ReportHandler {
 //                    String fullPath = path + _logPrefix + date + suffix;
 //                    File file = new File(fullPath);
 //                    if (!file.exists()) {
-//                        log.info("log path is not exists: " + file.getAbsolutePath());
+//                        log.debug("log path is not exists: " + file.getAbsolutePath());
 //                        continue;
 //                    }
-//                    log.info("read log: " + file.getAbsolutePath());
+//                    log.debug("read log: " + file.getAbsolutePath());
 //                    Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
 //                    compoundReportBean(reportList, reportMap.values(), cls);
 //                }
@@ -153,7 +153,7 @@ public final class ReportHandler {
                 }
             }
         } catch (IOException e) {
-            log.error("read report failure", e);
+            log.error("[read report failure]");
             throw new RuntimeException(e);
         } finally {
             if (lineIterator != null) lineIterator.close();
@@ -201,14 +201,14 @@ public final class ReportHandler {
     public static List<DynamicBean> acquireFileObject(String src, Map<String, PatternBean> patternMap, Integer... filterLineIndex) {
         File file = new File(src);
         if (!file.exists()) throw new RuntimeException("[log path is not exists: " + file.getAbsolutePath() + "]");
-        log.info("[read log path is " + file.getAbsolutePath() + "]");
+        log.debug("[read log path is " + file.getAbsolutePath() + "]");
 
         List<DynamicBean> fileList = Lists.newArrayList();
         try {
             Map<Integer, Map<String, Object>> fileMap = readFile(file, patternMap, filterLineIndex);
             compoundReportBean(fileList, fileMap.values());
         } catch (Exception e) {
-            log.error("read report failure", e);
+            log.error("[read report failure]");
             throw new RuntimeException(e);
         }
         return fileList;

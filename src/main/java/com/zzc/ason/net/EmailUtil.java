@@ -112,7 +112,7 @@ public final class EmailUtil {
             ts.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
             ts.close();
         } catch (Exception e) {
-            log.error("send email failure", e);
+            log.error("[send email failure]");
             throw new RuntimeException(e);
         }
     }

@@ -70,7 +70,7 @@ public final class DatabaseUtil {
             dataSource = acquireDataSource(hikariConfig);
             log.info("[initial data source over] [connection url is " + hikariConfig.getJdbcUrl() + "]");
         } catch (Exception e) {
-            log.error("initial database connection failure", e);
+            log.error("[initial database connection failure]", e);
             throw new RuntimeException(e);
         }
     }
@@ -86,7 +86,7 @@ public final class DatabaseUtil {
             try {
                 conn = dataSource.getConnection();
             } catch (SQLException e) {
-                log.error("get connection failure", e);
+                log.error("[get connection failure]", e);
                 throw new RuntimeException(e);
             } finally {
                 connectionThreadLocal.set(conn);
@@ -100,7 +100,7 @@ public final class DatabaseUtil {
         try {
             if (isTransaction) return executeQueryTransaction(sql, params);
         } catch (Exception e) {
-            log.error("execute query failure", e);
+            log.error("[execute query failure]", e);
             throw new RuntimeException(e);
         } finally {
             isTransactionThreadLocal.remove();
@@ -115,7 +115,7 @@ public final class DatabaseUtil {
             if (conn == null) return null;
             result = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
         } catch (SQLException e) {
-            log.error("execute query failure", e);
+            log.error("[execute query failure]", e);
             throw new RuntimeException(e);
         }
         return result;
@@ -127,7 +127,7 @@ public final class DatabaseUtil {
             Connection conn = acquireConnection();
             result = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
         } catch (SQLException e) {
-            log.error("execute query failure", e);
+            log.error("[execute query failure]", e);
             throw new RuntimeException(e);
         } finally {
             closeConnection();
@@ -142,7 +142,7 @@ public final class DatabaseUtil {
             if (conn == null) return -1;
             rows = QUERY_RUNNER.update(conn, sql, params);
         } catch (SQLException e) {
-            log.error("execute update failure", e);
+            log.error("[execute update failure]", e);
             throw new RuntimeException(e);
         }
         return rows;
@@ -154,7 +154,7 @@ public final class DatabaseUtil {
             Connection conn = acquireConnection();
             entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
         } catch (SQLException e) {
-            log.error("query entity list failure", e);
+            log.error("[query entity list failure]", e);
             throw new RuntimeException(e);
         } finally {
             closeConnection();
@@ -168,7 +168,7 @@ public final class DatabaseUtil {
             Connection conn = acquireConnection();
             entity = QUERY_RUNNER.query(conn, sql, new BeanHandler<T>(entityClass), params);
         } catch (SQLException e) {
-            log.error("query entity failure", e);
+            log.error("[query entity failure]", e);
             throw new RuntimeException(e);
         } finally {
             closeConnection();
@@ -184,12 +184,12 @@ public final class DatabaseUtil {
                 try {
                     conn.setAutoCommit(false);
                 } catch (SQLException e) {
-                    log.error("begin transaction failure", e);
+                    log.error("[begin transaction failure]", e);
                     throw new RuntimeException(e);
                 }
             }
         } catch (RuntimeException e) {
-            log.error("begin transaction failure", e);
+            log.error("[begin transaction failure]", e);
             throw new RuntimeException(e);
         } finally {
             isTransactionThreadLocal.set(true);
@@ -203,7 +203,7 @@ public final class DatabaseUtil {
                 isTransaction = false;
             }
         } catch (Exception e) {
-            log.error("acquire transaction failure", e);
+            log.error("[acquire transaction failure]", e);
             throw new RuntimeException(e);
         } finally {
             isTransactionThreadLocal.set(isTransaction);
@@ -217,7 +217,7 @@ public final class DatabaseUtil {
             try {
                 conn.commit();
             } catch (SQLException e) {
-                log.error("commit transaction failure", e);
+                log.error("[commit transaction failure]", e);
                 throw new RuntimeException(e);
             } finally {
                 removeTransaction();
@@ -232,7 +232,7 @@ public final class DatabaseUtil {
             try {
                 conn.rollback();
             } catch (SQLException e) {
-                log.error("rollback transaction failure", e);
+                log.error("[rollback transaction failure]", e);
                 throw new RuntimeException(e);
             } finally {
                 removeTransaction();
@@ -254,7 +254,7 @@ public final class DatabaseUtil {
             try {
                 conn.close();
             } catch (SQLException e) {
-                log.error("close connection failure", e);
+                log.error("[close connection failure]", e);
                 throw new RuntimeException(e);
             } finally {
                 connectionThreadLocal.remove();
@@ -267,9 +267,9 @@ public final class DatabaseUtil {
         if (dataSource != null) {
             try {
                 dataSource.close();
-                log.info("[close data source]");
+                log.debug("[close data source]");
             } catch (Exception e) {
-                log.error("close data source failure", e);
+                log.error("[close data source failure]", e);
                 throw new RuntimeException(e);
             }
             dataSource = null;

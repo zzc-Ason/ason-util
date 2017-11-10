@@ -37,7 +37,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(dynamicBean);
             }
         } catch (Exception e) {
-            log.error("search database failure", e);
+            log.error("[search database failure]");
             throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
@@ -61,7 +61,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(dynamicBean);
             }
         } catch (Exception e) {
-            log.error("search database failure", e);
+            log.error("[search database failure]");
             throw new RuntimeException(e);
         }
         return schemaBeanList;
@@ -84,7 +84,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(t);
             }
         } catch (Exception e) {
-            log.error("search database failure", e);
+            log.error("[search database failure]");
             throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
@@ -108,7 +108,7 @@ public final class SchemaHandler {
                 schemaBeanList.add(t);
             }
         } catch (Exception e) {
-            log.error("search database failure", e);
+            log.error("[search database failure]");
             throw new RuntimeException(e);
         }
         return schemaBeanList;

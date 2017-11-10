@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class Done {
 
-    public static Map<String, String> executeDateByStages(String startDate, String endDate, int days) throws ParseException {
+    public static Map<String, String> divideDate(String startDate, String endDate, int days) throws ParseException {
         Date start = DateUtils.parseDate(startDate, DateFormat.DATE_FORMAT_PATTERN);
         Date end = DateUtils.parseDate(endDate, DateFormat.DATE_FORMAT_PATTERN);
         Map<String, String> dateMap = Maps.newTreeMap();
@@ -37,22 +37,22 @@ public class Done {
         } else {
             log.warn("date {} must before {}", startDate, endDate);
         }
-        log.info("[divide \"{}\" - \"{}\" into {} part]", startDate, endDate, dateMap.size());
+        log.debug("[divide \"{}\" - \"{}\" into {} part]", startDate, endDate, dateMap.size());
         return dateMap;
     }
 
-    private static Map<Integer, Integer> executeCountByStages(Integer count, int size) {
+    public static Map<Integer, Integer> divideCount(Integer count, int size) {
         Map<Integer, Integer> countMap = Maps.newTreeMap();
         if (count <= size) {
             countMap.put(1, count);
         } else {
             for (int i = 1; i <= count; i += size) {
                 Integer value = i + size - 1;
-                if (i == count) value = count;
+                if (value >= count) value = count;
                 countMap.put(i, value);
             }
         }
-        log.info("[divide \"{}\" by \"{}\" into {} part]", count, size, countMap.size());
+        log.debug("[divide \"{}\" by \"{}\" into {} part]", count, size, countMap.size());
         return countMap;
     }
 

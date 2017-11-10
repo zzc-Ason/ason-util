@@ -23,18 +23,18 @@ public final class PropsUtil {
         try {
             is = ClassUtil.getClassLoader().getResourceAsStream(fileName);
             if (is == null) {
-                throw new FileNotFoundException(fileName + "file is not found");
+                throw new FileNotFoundException("[file is not found] [file name is: " + fileName + "]");
             }
             props = new Properties();
             props.load(is);
         } catch (IOException e) {
-            log.error("load properties file failure", e);
+            log.error("[load properties file failure]", e);
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    log.error("close input stream failure", e);
+                    log.error("[close input stream failure]", e);
                 }
             }
         }

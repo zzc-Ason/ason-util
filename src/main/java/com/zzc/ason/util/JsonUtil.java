@@ -20,7 +20,7 @@ public final class JsonUtil {
         try {
             json = OBJECT_MAPPER.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
-            log.error("convert POJO to JSON failure", e);
+            log.error("[convert POJO to JSON failure]", e);
             throw new RuntimeException(e);
         }
         return json;
@@ -31,7 +31,7 @@ public final class JsonUtil {
         try {
             pojo = OBJECT_MAPPER.readValue(json, type);
         } catch (IOException e) {
-            log.error("convert JSON to POJO failure", e);
+            log.error("[convert JSON to POJO failure]", e);
             throw new RuntimeException(e);
         }
         return pojo;

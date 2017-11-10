@@ -24,7 +24,7 @@ public final class ReflectionUtil {
         try {
             instance = cls.newInstance();
         } catch (Exception e) {
-            log.error("new instance failure", e);
+            log.error("[new instance failure]");
             throw new RuntimeException(e);
         }
         return instance;
@@ -35,7 +35,7 @@ public final class ReflectionUtil {
             Class<?> cls = Class.forName(className);
             return newInstance(cls);
         } catch (ClassNotFoundException e) {
-            log.error("new instance failure", e);
+            log.error("[new instance failure]");
             throw new RuntimeException(e);
         }
     }
@@ -46,7 +46,7 @@ public final class ReflectionUtil {
             method.setAccessible(true);
             result = method.invoke(obj, args);
         } catch (Exception e) {
-            log.error("invoke method failure", e);
+            log.error("[invoke method failure]");
             throw new RuntimeException(e);
         }
         return result;
@@ -57,7 +57,7 @@ public final class ReflectionUtil {
             field.setAccessible(true);
             field.set(obj, value);
         } catch (IllegalAccessException e) {
-            log.error("set field failure", e);
+            log.error("[set field failure]");
             throw new RuntimeException(e);
         }
     }
@@ -74,7 +74,7 @@ public final class ReflectionUtil {
                 }
             }
         } catch (Exception e) {
-            log.error("set value of field \"" + fieldName + "\" failure", e);
+            log.error("[set value of field \"" + fieldName + "\" failure]");
             throw new RuntimeException(e);
         }
     }

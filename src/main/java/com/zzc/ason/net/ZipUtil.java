@@ -83,6 +83,4 @@ public final class ZipUtil {
             zipFile.extractFile(fileHeader, srcFile.substring(0, srcFile.lastIndexOf(Symbol.LINUX_SEPARATOR)));
         }
     }
-
-
 }

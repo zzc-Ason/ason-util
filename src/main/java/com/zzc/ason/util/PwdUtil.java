@@ -25,7 +25,7 @@ public final class PwdUtil {
                 if (StringUtils.isNotBlank(value)) return value.trim();
             }
         } catch (Exception e) {
-            log.error("failed to load file " + filePath, e);
+            log.error("[failed to load file] [file path is: {}] ", filePath);
             throw new RuntimeException(e);
         }
         return null;
