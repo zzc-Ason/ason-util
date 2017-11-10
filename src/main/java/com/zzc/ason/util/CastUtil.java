@@ -5,6 +5,8 @@ import com.zzc.ason.common.Symbol;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Timestamp;
+
 /**
  * author : Ason
  * createTime : 2017 年 07 月 27 日
@@ -18,6 +20,25 @@ public final class CastUtil {
         Double h = 0.0;
         if (t.intValue() != 0) h = Double.valueOf(Math.round(c * 10000 / t.intValue()));
         return h / 100 + Symbol.PER;
+    }
+
+    public static Timestamp castTimestamp(Object obj) {
+        return castTimestamp(obj, null);
+    }
+
+    public static Timestamp castTimestamp(Object obj, Timestamp defaultValue) {
+        Timestamp timestampValue = defaultValue;
+        if (obj != null) {
+            String strValue = castString(obj);
+            if (StringUtils.isNotEmpty(strValue)) {
+                try {
+                    timestampValue = Timestamp.valueOf(strValue);
+                } catch (NumberFormatException e) {
+                    timestampValue = defaultValue;
+                }
+            }
+        }
+        return timestampValue;
     }
 
     public static String castString(Object obj) {
