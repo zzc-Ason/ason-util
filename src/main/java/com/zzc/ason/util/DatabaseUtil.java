@@ -68,7 +68,7 @@ public final class DatabaseUtil {
             hikariConfig.setConnectionTestQuery("select 1");
             hikariConfig.setConnectionTimeout(30000);
             dataSource = acquireDataSource(hikariConfig);
-            log.info("[initial data source over] [connection url is " + hikariConfig.getJdbcUrl() + "]");
+            log.debug("[initial data source over] [connection url is " + hikariConfig.getJdbcUrl() + "]");
         } catch (Exception e) {
             log.error("[initial database connection failure]", e);
             throw new RuntimeException(e);
@@ -148,7 +148,7 @@ public final class DatabaseUtil {
         return rows;
     }
 
-    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Object... params) {
+    public static <T> List<T> queryEntityList(String sql, Class<T> entityClass, Object... params) {
         List<T> entityList;
         try {
             Connection conn = acquireConnection();

@@ -15,13 +15,13 @@ public final class PathUtil {
     public static <T> String acquireItemPath(Class<T> cls) {
         final String basePath = cls.getProtectionDomain().getCodeSource().getLocation().getPath();
         final String filePath = basePath.substring(0, basePath.lastIndexOf("/") + 1);
-        log.info("[acquire item filePath is " + filePath + "]");
+        log.debug("[acquire item filePath is " + filePath + "]");
         return filePath;
     }
 
     public static void deleteQuietly(String fillPath) {
         File file = FileUtils.getFile(fillPath);
         if (file.exists()) FileUtils.deleteQuietly(file);
-        log.info("[delete dir over] [dir is: " + fillPath + "]");
+        log.debug("[delete dir over] [dir is: " + fillPath + "]");
     }
 }

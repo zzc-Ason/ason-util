@@ -36,12 +36,6 @@ public final class FileUtil {
         return collection;
     }
 
-    public static boolean deleteQuietly(String src) {
-        File file = FileUtils.getFile(src);
-        if (!file.exists()) return true;
-        return FileUtils.deleteQuietly(file);
-    }
-
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             String[] children = dir.list();

@@ -125,6 +125,6 @@ public final class SchemaHandler {
      * Describe : 获取指定集合信息
      */
     public static <T> List<T> acquireEntityList(String sql, Class<T> cls, String... params) {
-        return DatabaseUtil.queryEntityList(cls, sql, params);
+        return DatabaseUtil.queryEntityList(sql, cls, params);
     }
 }
