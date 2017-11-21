@@ -18,7 +18,7 @@ public final class CastUtil {
 
     public static String rate(Integer c, Integer t) {
         Double h = 0.0;
-        if (t.intValue() != 0) h = Double.valueOf(Math.round(c * 10000 / t.intValue()));
+        if (t.intValue() != 0) h = Double.valueOf(Math.round(c.longValue() * 10000 / t.longValue()));
         return h / 100 + Symbol.PER;
     }
 
