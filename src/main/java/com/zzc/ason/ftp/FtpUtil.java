@@ -113,36 +113,25 @@ public class FtpUtil {
      * @throws IOException on I/O errors
      */
     public void download(String ftpFileName, File localFile) throws IOException {
-        // Download.  
-        OutputStream out = null;
-        try {
-            // Use passive mode to pass firewalls.  
-            ftp.enterLocalPassiveMode();
-            // Get file info.  
-            FTPFile[] fileInfoArray = ftp.listFiles(ftpFileName);
-            if (fileInfoArray == null) {
-                throw new FileNotFoundException("File " + ftpFileName + " was not found on FTP server.");
-            }
-            // Check file size.  
-            FTPFile fileInfo = fileInfoArray[0];
-            long size = fileInfo.getSize();
-            if (size > Integer.MAX_VALUE) {
-                throw new IOException("File " + ftpFileName + " is too large.");
-            }
-            // Download file.  
-            out = new BufferedOutputStream(new FileOutputStream(localFile));
-            if (!ftp.retrieveFile(ftpFileName, out)) {
-                throw new IOException("Error loading file " + ftpFileName + " from FTP server. Check FTP permissions and path.");
-            }
-            out.flush();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                }
-            }
+        // Use passive mode to pass firewalls.
+        ftp.enterLocalPassiveMode();
+        // Get file info.
+        FTPFile[] fileInfoArray = ftp.listFiles(ftpFileName);
+        if (fileInfoArray == null) {
+            throw new FileNotFoundException("File " + ftpFileName + " was not found on FTP server.");
         }
+        // Check file size.
+        FTPFile fileInfo = fileInfoArray[0];
+        long size = fileInfo.getSize();
+        if (size > Integer.MAX_VALUE) {
+            throw new IOException("File " + ftpFileName + " is too large.");
+        }
+        // Download file.
+        @Cleanup OutputStream out = new BufferedOutputStream(new FileOutputStream(localFile));
+        if (!ftp.retrieveFile(ftpFileName, out)) {
+            throw new IOException("Error loading file " + ftpFileName + " from FTP server. Check FTP permissions and path.");
+        }
+        out.flush();
     }
 
     /**
