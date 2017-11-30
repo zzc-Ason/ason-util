@@ -86,7 +86,7 @@ public final class DatabaseUtil {
             try {
                 conn = dataSource.getConnection();
             } catch (SQLException e) {
-                log.error("[get connection failure]", e);
+                log.error("[acquire connection failure]", e);
                 throw new RuntimeException(e);
             } finally {
                 connectionThreadLocal.set(conn);
@@ -95,120 +95,73 @@ public final class DatabaseUtil {
         return conn;
     }
 
-    public static List<Map<String, Object>> executeQuery(String sql, Object... params) {
+    public static List<Map<String, Object>> executeQuery(String sql, Object... params) throws SQLException {
         Boolean isTransaction = isTransactionThreadLocal.get();
-        try {
-            if (isTransaction) return executeQueryTransaction(sql, params);
-        } catch (Exception e) {
-            log.error("[execute query failure]", e);
-            throw new RuntimeException(e);
-        } finally {
-            isTransactionThreadLocal.remove();
-        }
+        if (isTransaction) return executeQueryTransaction(sql, params);
         return executeQueryNoTransaction(sql, params);
     }
 
-    private static List<Map<String, Object>> executeQueryTransaction(String sql, Object... params) {
-        List<Map<String, Object>> result = Lists.newArrayList();
-        try {
-            Connection conn = connectionThreadLocal.get();
-            if (conn == null) return null;
-            result = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
-        } catch (SQLException e) {
-            log.error("[execute query failure]", e);
-            throw new RuntimeException(e);
-        }
-        return result;
+    private static List<Map<String, Object>> executeQueryTransaction(String sql, Object... params) throws SQLException {
+        Connection conn = connectionThreadLocal.get();
+        if (conn == null) return Lists.newArrayList();
+        return QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
     }
 
-    private static List<Map<String, Object>> executeQueryNoTransaction(String sql, Object... params) {
-        List<Map<String, Object>> result = Lists.newArrayList();
+    private static List<Map<String, Object>> executeQueryNoTransaction(String sql, Object... params) throws SQLException {
         try {
             Connection conn = acquireConnection();
-            result = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
-        } catch (SQLException e) {
-            log.error("[execute query failure]", e);
-            throw new RuntimeException(e);
+            return QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
         } finally {
+            removeTransaction();
             closeConnection();
         }
-        return result;
     }
 
-    public static int executeUpdate(String sql, Object... params) {
-        int rows = 0;
-        try {
-            Connection conn = connectionThreadLocal.get();
-            if (conn == null) return -1;
-            rows = QUERY_RUNNER.update(conn, sql, params);
-        } catch (SQLException e) {
-            log.error("[execute update failure]", e);
-            throw new RuntimeException(e);
+    public static int executeUpdate(String sql, Object... params) throws SQLException {
+        Connection conn = connectionThreadLocal.get();
+        if (conn == null) {
+            log.error("[execute udpate failure] [conn is null]");
+            return -1;
         }
-        return rows;
+        return QUERY_RUNNER.update(conn, sql, params);
     }
 
-    public static <T> List<T> queryEntityList(String sql, Class<T> entityClass, Object... params) {
+    public static <T> List<T> queryEntityList(String sql, Class<T> entityClass, Object... params) throws SQLException {
         List<T> entityList;
         try {
             Connection conn = acquireConnection();
             entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
-        } catch (SQLException e) {
-            log.error("[query entity list failure]", e);
-            throw new RuntimeException(e);
         } finally {
             closeConnection();
         }
         return entityList;
     }
 
-    public static <T> T queryEntity(Class<T> entityClass, String sql, Object... params) {
+    public static <T> T queryEntity(Class<T> entityClass, String sql, Object... params) throws SQLException {
         T entity;
         try {
             Connection conn = acquireConnection();
             entity = QUERY_RUNNER.query(conn, sql, new BeanHandler<T>(entityClass), params);
-        } catch (SQLException e) {
-            log.error("[query entity failure]", e);
-            throw new RuntimeException(e);
         } finally {
             closeConnection();
         }
         return entity;
     }
 
-    public static void beginTransaction() {
+    public static void beginTransaction() throws SQLException {
         try {
-            Boolean isTransaction = acquireTransaction();
+            configTransaction();
             Connection conn = acquireConnection();
             if (conn != null) {
-                try {
-                    conn.setAutoCommit(false);
-                } catch (SQLException e) {
-                    log.error("[begin transaction failure]", e);
-                    throw new RuntimeException(e);
-                }
+                conn.setAutoCommit(false);
             }
-        } catch (RuntimeException e) {
-            log.error("[begin transaction failure]", e);
-            throw new RuntimeException(e);
         } finally {
             isTransactionThreadLocal.set(true);
         }
     }
 
-    private static Boolean acquireTransaction() {
-        Boolean isTransaction = isTransactionThreadLocal.get();
-        try {
-            if (isTransaction == null) {
-                isTransaction = false;
-            }
-        } catch (Exception e) {
-            log.error("[acquire transaction failure]", e);
-            throw new RuntimeException(e);
-        } finally {
-            isTransactionThreadLocal.set(isTransaction);
-        }
-        return isTransaction;
+    private static void configTransaction() {
+        if (isTransactionThreadLocal.get() == null) isTransactionThreadLocal.set(false);
     }
 
     public static void commitTransaction() {

@@ -7,6 +7,7 @@ import com.zzc.ason.util.DatabaseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public final class SchemaHandler {
     /**
      * Describe : 获取数据库信息到动态类集合：List<DynamicBean>
      */
-    public static List<DynamicBean> acquireDataByDriver(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Object... params) {
+    public static List<DynamicBean> acquireDataByDriver(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Object... params) throws SQLException {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
         DatabaseUtil.initialDataSource(mysqlUrl, mysqlUser, mysqlPassword);
         try {
@@ -36,9 +37,6 @@ public final class SchemaHandler {
                 DynamicBean dynamicBean = new DynamicBean(returnMap);
                 schemaBeanList.add(dynamicBean);
             }
-        } catch (Exception e) {
-            log.error("[search database failure]");
-            throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
         }
@@ -48,21 +46,15 @@ public final class SchemaHandler {
     /**
      * Describe : 未初始化数据库，获取数据库信息到动态类集合：List<DynamicBean>
      */
-    public static List<DynamicBean> acquireData(String sql, Object... params) {
+    public static List<DynamicBean> acquireData(String sql, Object... params) throws SQLException {
         List<DynamicBean> schemaBeanList = Lists.newCopyOnWriteArrayList();
-        try {
-            List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
-            if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
-
-            Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            while (iterator.hasNext()) {
-                Map<String, Object> returnMap = iterator.next();
-                DynamicBean dynamicBean = new DynamicBean(returnMap);
-                schemaBeanList.add(dynamicBean);
-            }
-        } catch (Exception e) {
-            log.error("[search database failure]");
-            throw new RuntimeException(e);
+        List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
+        if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
+        Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> returnMap = iterator.next();
+            DynamicBean dynamicBean = new DynamicBean(returnMap);
+            schemaBeanList.add(dynamicBean);
         }
         return schemaBeanList;
     }
@@ -70,7 +62,7 @@ public final class SchemaHandler {
     /**
      * Describe : 获取数据库信息到指定类集合：List<T>
      */
-    public static <T> List<T> acquireDataFromDB(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Class<T> cls, Object... params) {
+    public static <T> List<T> acquireDataFromDB(String sql, String mysqlUrl, String mysqlUser, String mysqlPassword, Class<T> cls, Object... params) throws Exception {
         List<T> schemaBeanList = Lists.newCopyOnWriteArrayList();
         try {
             DatabaseUtil.initialDataSource(mysqlUrl, mysqlUser, mysqlPassword);
@@ -83,9 +75,6 @@ public final class SchemaHandler {
                 T t = MapBeanUtils.mapToObject(returnMap, cls);
                 schemaBeanList.add(t);
             }
-        } catch (Exception e) {
-            log.error("[search database failure]");
-            throw new RuntimeException(e);
         } finally {
             DatabaseUtil.closeDataSource();
         }
@@ -95,21 +84,15 @@ public final class SchemaHandler {
     /**
      * Describe : 未初始化数据库，获取数据库信息到指定类集合：List<T>
      */
-    public static <T> List<T> acquireDataFromDB(String sql, Class<T> cls, Object... params) {
+    public static <T> List<T> acquireDataFromDB(String sql, Class<T> cls, Object... params) throws Exception {
         List<T> schemaBeanList = Lists.newCopyOnWriteArrayList();
-        try {
-            List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
-            if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
-
-            Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
-            while (iterator.hasNext()) {
-                Map<String, Object> returnMap = iterator.next();
-                T t = MapBeanUtils.mapToObject(returnMap, cls);
-                schemaBeanList.add(t);
-            }
-        } catch (Exception e) {
-            log.error("[search database failure]");
-            throw new RuntimeException(e);
+        List<Map<String, Object>> mysqlReturnMap = DatabaseUtil.executeQuery(sql, params);
+        if (CollectionUtils.isEmpty(mysqlReturnMap)) return schemaBeanList;
+        Iterator<Map<String, Object>> iterator = mysqlReturnMap.iterator();
+        while (iterator.hasNext()) {
+            Map<String, Object> returnMap = iterator.next();
+            T t = MapBeanUtils.mapToObject(returnMap, cls);
+            schemaBeanList.add(t);
         }
         return schemaBeanList;
     }
@@ -117,14 +100,14 @@ public final class SchemaHandler {
     /**
      * Describe : 获取指定类信息
      */
-    public static <T> T acquireEntity(String sql, Class<T> cls, String... params) {
+    public static <T> T acquireEntity(String sql, Class<T> cls, String... params) throws SQLException {
         return DatabaseUtil.queryEntity(cls, sql, params);
     }
 
     /**
      * Describe : 获取指定集合信息
      */
-    public static <T> List<T> acquireEntityList(String sql, Class<T> cls, String... params) {
+    public static <T> List<T> acquireEntityList(String sql, Class<T> cls, String... params) throws SQLException {
         return DatabaseUtil.queryEntityList(sql, cls, params);
     }
 }
