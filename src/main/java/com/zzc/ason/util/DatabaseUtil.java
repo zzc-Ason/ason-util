@@ -149,8 +149,8 @@ public final class DatabaseUtil {
     }
 
     public static void beginTransaction() throws SQLException {
+        configTransaction();
         try {
-            configTransaction();
             Connection conn = acquireConnection();
             if (conn != null) {
                 conn.setAutoCommit(false);
@@ -174,7 +174,6 @@ public final class DatabaseUtil {
                 throw new RuntimeException(e);
             } finally {
                 removeTransaction();
-                closeConnection();
             }
         }
     }
@@ -189,7 +188,6 @@ public final class DatabaseUtil {
                 throw new RuntimeException(e);
             } finally {
                 removeTransaction();
-                closeConnection();
             }
         }
     }
@@ -217,6 +215,7 @@ public final class DatabaseUtil {
     }
 
     public static void closeDataSource() {
+        closeConnection();
         if (dataSource != null) {
             try {
                 dataSource.close();

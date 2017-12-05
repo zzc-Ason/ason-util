@@ -176,4 +176,13 @@ public final class EmailUtil {
             return new PasswordAuthentication(username, password);
         }
     }
+
+    /*
+     * remark：异常报警邮件
+     */
+    private static void sendAlarmEmail(String host, String from, String password, String to, String title, Exception e) {
+        EmailUtil emailUtil = new EmailUtil(host, from, password, from, to, title, e.toString());
+        emailUtil.send();
+        log.info("[send alarm email over]");
+    }
 }
