@@ -97,7 +97,7 @@ public final class DatabaseUtil {
 
     public static List<Map<String, Object>> executeQuery(String sql, Object... params) throws SQLException {
         Boolean isTransaction = isTransactionThreadLocal.get();
-        if (isTransaction) return executeQueryTransaction(sql, params);
+        if (isTransaction != null && isTransaction) return executeQueryTransaction(sql, params);
         return executeQueryNoTransaction(sql, params);
     }
 
@@ -149,8 +149,8 @@ public final class DatabaseUtil {
     }
 
     public static void beginTransaction() throws SQLException {
-        configTransaction();
         try {
+            acquireTransaction();
             Connection conn = acquireConnection();
             if (conn != null) {
                 conn.setAutoCommit(false);
@@ -160,8 +160,10 @@ public final class DatabaseUtil {
         }
     }
 
-    private static void configTransaction() {
-        if (isTransactionThreadLocal.get() == null) isTransactionThreadLocal.set(false);
+    private static void acquireTransaction() {
+        Boolean isTransaction = isTransactionThreadLocal.get();
+        if (isTransaction == null) isTransaction = false;
+        isTransactionThreadLocal.set(isTransaction);
     }
 
     public static void commitTransaction() {
@@ -194,9 +196,7 @@ public final class DatabaseUtil {
 
     private static void removeTransaction() {
         Boolean isTransaction = isTransactionThreadLocal.get();
-        if (isTransaction != null) {
-            isTransactionThreadLocal.remove();
-        }
+        if (isTransaction != null) isTransactionThreadLocal.remove();
     }
 
     private static void closeConnection() {
@@ -210,7 +210,6 @@ public final class DatabaseUtil {
             } finally {
                 connectionThreadLocal.remove();
             }
-            conn = null;
         }
     }
 
