@@ -1,6 +1,5 @@
 package com.zzc.ason.util;
 
-import com.google.common.collect.Lists;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
@@ -96,74 +95,42 @@ public final class DatabaseUtil {
     }
 
     public static List<Map<String, Object>> executeQuery(String sql, Object... params) throws SQLException {
-        Boolean isTransaction = isTransactionThreadLocal.get();
-        if (isTransaction != null && isTransaction) return executeQueryTransaction(sql, params);
-        return executeQueryNoTransaction(sql, params);
-    }
-
-    private static List<Map<String, Object>> executeQueryTransaction(String sql, Object... params) throws SQLException {
-        Connection conn = connectionThreadLocal.get();
-        if (conn == null) return Lists.newArrayList();
+        Connection conn = getConnInstance();
         return QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
     }
 
-    private static List<Map<String, Object>> executeQueryNoTransaction(String sql, Object... params) throws SQLException {
-        try {
-            Connection conn = acquireConnection();
-            return QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
-        } finally {
-            removeTransaction();
-            closeConnection();
-        }
-    }
-
     public static int executeUpdate(String sql, Object... params) throws SQLException {
-        Connection conn = connectionThreadLocal.get();
-        if (conn == null) {
-            log.error("[execute udpate failure] [conn is null]");
-            return -1;
-        }
+        Connection conn = getConnInstance();
         return QUERY_RUNNER.update(conn, sql, params);
     }
 
     public static <T> List<T> queryEntityList(String sql, Class<T> entityClass, Object... params) throws SQLException {
-        List<T> entityList;
-        try {
-            Connection conn = acquireConnection();
-            entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
-        } finally {
-            closeConnection();
-        }
-        return entityList;
+        Connection conn = getConnInstance();
+        return QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
     }
 
     public static <T> T queryEntity(Class<T> entityClass, String sql, Object... params) throws SQLException {
-        T entity;
-        try {
-            Connection conn = acquireConnection();
-            entity = QUERY_RUNNER.query(conn, sql, new BeanHandler<T>(entityClass), params);
-        } finally {
-            closeConnection();
+        Connection conn = getConnInstance();
+        return QUERY_RUNNER.query(conn, sql, new BeanHandler<T>(entityClass), params);
+    }
+
+    private static Connection getConnInstance() {
+        Connection conn;
+        Boolean isTransaction = isTransactionThreadLocal.get();
+        if (isTransaction != null && isTransaction) {
+            conn = connectionThreadLocal.get();
+        } else {
+            conn = acquireConnection();
         }
-        return entity;
+        return conn;
     }
 
     public static void beginTransaction() throws SQLException {
-        try {
-            acquireTransaction();
-            Connection conn = acquireConnection();
-            if (conn != null) {
-                conn.setAutoCommit(false);
-            }
-        } finally {
-            isTransactionThreadLocal.set(true);
-        }
-    }
-
-    private static void acquireTransaction() {
         Boolean isTransaction = isTransactionThreadLocal.get();
-        if (isTransaction == null) isTransaction = false;
-        isTransactionThreadLocal.set(isTransaction);
+        if (isTransaction == null || !isTransaction) isTransactionThreadLocal.set(true);
+
+        Connection conn = acquireConnection();
+        if (conn != null) conn.setAutoCommit(false);
     }
 
     public static void commitTransaction() {

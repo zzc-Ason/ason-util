@@ -15,36 +15,9 @@ import java.util.Set;
 @Slf4j
 public final class PrintOut {
 
-    public static void debug(String info, Throwable... throwable) {
-        if (throwable.length == 0) log.debug(info);
-        for (Throwable e : throwable) {
-            log.debug(info, e);
-        }
-    }
-
-    public static void info(String info, Throwable... throwable) {
-        if (throwable.length == 0) log.info(info);
-        for (Throwable e : throwable) log.info(info, e);
-    }
-
-    public static void warn(String info, Throwable... throwable) {
-        if (throwable.length == 0) log.warn(info);
-        for (Throwable e : throwable) log.warn(info, e);
-
-    }
-
-    public static void error(String info, Throwable... throwable) {
-        if (throwable.length == 0) log.error(info);
-        for (Throwable e : throwable) log.error(info, e);
-    }
-
     public static void object(Object object) {
         if (object == null) log.info(null);
         else log.info(object.toString());
-    }
-
-    public static void str(String str) {
-        log.info(str);
     }
 
     public static <T> void list(List<T> list) {
@@ -59,9 +32,9 @@ public final class PrintOut {
     public static void map(Map<?, ?> map) {
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             if (entry == null)
-                log.info(null + Symbol.GROUP_SEPARATOR + null);
+                log.info("{" + null + Symbol.COLON + null + "}");
             else
-                log.info(entry.getKey() + Symbol.GROUP_SEPARATOR + entry.getValue());
+                log.info("{" + entry.getKey() + Symbol.COLON + entry.getValue() + "}");
         }
     }
 
@@ -72,9 +45,5 @@ public final class PrintOut {
             else
                 log.info(t.toString());
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-
     }
 }

@@ -24,6 +24,8 @@ public class Symbol {
     public static final String MASK = "****************";  // 掩码
     public static final String SINGLE_MASK = "*";           // 单掩码
     public static final String VERTICAL_BAR = "|";           // 竖线
+    public static final String BLANK = " ";           // 空格
+    public static final String NA = "N/A";           // 无效
 
     public static String mask(Integer count) {
         StringBuilder sb = new StringBuilder(StringUtils.EMPTY);

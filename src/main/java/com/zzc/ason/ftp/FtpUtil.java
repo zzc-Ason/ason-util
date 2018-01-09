@@ -93,11 +93,11 @@ public class FtpUtil {
      * @throws IOException on I/O errors
      */
     public void upload(String ftpFileName, File localFile) throws IOException {
-        // File check.  
+        // File check.
         if (!localFile.exists()) {
             throw new IOException("Can't upload '" + localFile.getAbsolutePath() + "'. This file doesn't exist.");
         }
-        // Upload.  
+        // Upload.
         ftp.enterLocalPassiveMode();    // Use passive mode to pass firewalls.
         @Cleanup InputStream in = new BufferedInputStream(new FileInputStream(localFile));
         if (!ftp.storeFile(ftpFileName, in)) {

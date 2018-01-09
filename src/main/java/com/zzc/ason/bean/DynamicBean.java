@@ -129,6 +129,6 @@ public class DynamicBean {
 
     @Override
     public String toString() {
-        return "DynamicBean{object=" + object + ", beanMap=" + beanMap + '}';
+        return "{object=" + object + ", beanMap=" + beanMap + '}';
     }
 }

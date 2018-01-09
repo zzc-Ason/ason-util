@@ -25,12 +25,15 @@ public final class DateFormat {
     public static final String DATE_FORMAT_6 = "yyyy-MM-dd";                // 时间格式6
     public static final String DATE_FORMAT_7 = "yyyy/MM/dd";                // 时间格式7
     public static final String DATE_FORMAT_8 = "yyyMM";                      // 时间格式8
+    public static final String DATE_FORMAT_9 = "yyyy/MM/dd HH:mm:ss";                      // 时间格式9
+    public static final String DATE_FORMAT_10 = "yyyy-MM-dd'T'HH:mm:ss.SSS";                      // 时间格式9
+    public static final String DATE_FORMAT_11 = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";                      // 时间格式9
 
     public static final String YEAR = "yyyy";         // 年份
     public static final String MONTH = "MM";          // 月份
     public static final String DATE = "dd";           // 日期
 
-    public static final String[] DATE_FORMAT_PATTERN = new String[]{DATE_FORMAT_1, DATE_FORMAT_2, DATE_FORMAT_3, DATE_FORMAT_4, DATE_FORMAT_5, DATE_FORMAT_6, DATE_FORMAT_7, DATE_FORMAT_8};    // 时间解析格式
+    public static final String[] DATE_FORMAT_PATTERN = new String[]{DATE_FORMAT_1, DATE_FORMAT_2, DATE_FORMAT_3, DATE_FORMAT_4, DATE_FORMAT_5, DATE_FORMAT_6, DATE_FORMAT_7, DATE_FORMAT_8, DATE_FORMAT_9, DATE_FORMAT_10, DATE_FORMAT_11};    // 时间解析格式
 
     public static int daysBetween(Date startTime, Date endTime) {
         String startDateTime = DateFormatUtils.format(startTime, DATE_FORMAT_6);
@@ -39,8 +42,13 @@ public final class DateFormat {
     }
 
     public static int daysBetween(String startTime, String endTime) {
-        DateTime startDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(startTime);
-        DateTime endDateTime = DateTimeFormat.forPattern(DATE_FORMAT_6).parseDateTime(endTime);
+        String defaultDateFromat = DATE_FORMAT_6;
+        return daysBetween(startTime, endTime, defaultDateFromat);
+    }
+
+    public static int daysBetween(String startTime, String endTime, String pattern) {
+        DateTime startDateTime = DateTimeFormat.forPattern(pattern).parseDateTime(startTime);
+        DateTime endDateTime = DateTimeFormat.forPattern(pattern).parseDateTime(endTime);
         return Days.daysBetween(startDateTime, endDateTime).getDays();
     }
 

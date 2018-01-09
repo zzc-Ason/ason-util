@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zzc.ason.bean.DynamicBean;
 import com.zzc.ason.bean.PatternBean;
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
@@ -38,23 +39,24 @@ public final class ReportHandler {
     /**
      * Describe : 读取日志到动态类集合：List<DynamicBean>
      */
-    public static List<DynamicBean> acquireReportInfo(String path, String prefix, String suffix, Date startTime, Date endTime, Map<String, PatternBean> patternMap) {
+    public static List<DynamicBean> acquireReportInfo(String path, String prefix, String suffix, Date startTime, Date endTime, String pattern, Map<String, PatternBean> patternMap) {
         List<DynamicBean> reportList = Lists.newCopyOnWriteArrayList();
         try {
             Date nowTime = startTime;
             while (DateUtils.truncatedCompareTo(nowTime, endTime, Calendar.DATE) < 1) {
                 String[] logPrefixS = prefix.split(",");
-                String date = DateFormatUtils.format(nowTime, "yyyyMMdd");
+                String date = DateFormatUtils.format(nowTime, pattern);
                 for (String _logPrefix : logPrefixS) {
+                    long beginTime = System.currentTimeMillis();
                     String fullPath = path + _logPrefix + date + suffix;
                     File file = new File(fullPath);
                     if (!file.exists()) {
                         log.info("[log path is not exists: " + file.getAbsolutePath() + "]");
                         continue;
                     }
-                    log.debug("[read log path is " + file.getAbsolutePath() + "]");
                     Map<String, Map<String, Object>> reportMap = readReport(file, patternMap);
                     compoundReportBean(reportList, reportMap.values());
+                    log.info("[acquire report] [log size is {}] [log name is {}] [escape time is {}ms]", reportMap.size(), file.getName(), System.currentTimeMillis() - beginTime);
                 }
                 nowTime = DateUtils.addDays(nowTime, 1);
             }
@@ -219,8 +221,7 @@ public final class ReportHandler {
      */
     private static Map<Integer, Map<String, Object>> readFile(File file, Map<String, PatternBean> patternMap, Integer... filterLineIndex) throws Exception {
         Map<Integer, Map<String, Object>> fileMap = Maps.newHashMap();      // 容器
-        LineIterator lineIterator = null;
-        lineIterator = FileUtils.lineIterator(file, "UTF-8");
+        @Cleanup LineIterator lineIterator = FileUtils.lineIterator(file, "UTF-8");
         int row = 0;
         while (lineIterator.hasNext()) {
             String line = lineIterator.nextLine();

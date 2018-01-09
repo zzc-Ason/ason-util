@@ -82,6 +82,14 @@ public class Done {
         }
     }
 
+    public static Integer handlerIntegerArgs(String[] args, int index) {
+        try {
+            return Integer.valueOf(args[index]);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static Boolean handlerBooleanArgs(String[] args, int index) {
         try {
             return Boolean.valueOf(args[index]);

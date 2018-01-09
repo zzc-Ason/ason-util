@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
+import java.text.NumberFormat;
 
 /**
  * author : Ason
@@ -17,9 +18,11 @@ import java.sql.Timestamp;
 public final class CastUtil {
 
     public static String rate(Integer c, Integer t) {
-        Double h = 0.0;
-        if (t.intValue() != 0) h = Double.valueOf(Math.round(c.longValue() * 10000 / t.longValue()));
-        return h / 100 + Symbol.PER;
+        // 创建一个数值格式化对象
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        // 设置精确到小数点后2位
+        numberFormat.setMaximumFractionDigits(2);
+        return numberFormat.format((float) c / (float) t * 100) + Symbol.PER;
     }
 
     public static Timestamp castTimestamp(Object obj) {
